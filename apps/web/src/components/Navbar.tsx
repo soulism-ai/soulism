@@ -16,7 +16,6 @@ export function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
-          <Link href="/dashboard" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Dashboard</Link>
           <Link href="/souls" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Souls</Link>
           <Link href="/souls/upload" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Upload</Link>
           <button className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Import</button>

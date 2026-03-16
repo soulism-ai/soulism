@@ -52,7 +52,7 @@ export function UserNav() {
             <p className="text-sm font-bold text-white truncate">{session?.user?.email}</p>
           </div>
           <div className="py-1">
-            <a href="/souls" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-colors">Dashboard</a>
+            <a href="/dashboard" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-colors">Account / Dashboard</a>
             <a href="/settings" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-colors">Settings</a>
           </div>
           <div className="py-1 border-t border-white/5">
