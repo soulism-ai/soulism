@@ -48,7 +48,7 @@ The admin console is not the primary product surface. Treat it as operator tooli
 - policy debugging
 - persona inspection
 
-If you want an OpenClaw-style product posture, the main story should be:
+If you want a Soulism-style product posture, the main story should be:
 - self-hosting
 - source ownership
 - persistent memory

@@ -5,7 +5,7 @@
   "integrationBoundary": "mcp-gateway",
   "artifacts": [
     "marketplace/openai/app.json",
-    "apps/openai-app-quickstart/src/index.ts"
+    "apps/openai-app/src/index.ts"
   ],
   "channels": ["chatgpt-apps", "openai-apps-marketplace"],
   "contract": {

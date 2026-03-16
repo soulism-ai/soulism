@@ -1,0 +1,15 @@
+.vercel
+.pnpm-store
+node_modules/
+dist/
+build/
+coverage/
+.turbo/
+.next/
+.open-next/
+.wrangler/
+.env
+.env.local
+pnpm-debug.log
+.DS_Store
+.env
