@@ -65,9 +65,9 @@ def build_manifest(docs_dir):
     return docs
 
 if __name__ == '__main__':
-    root_dir = os.getcwd()
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     docs_dir = os.path.join(root_dir, 'docs')
-    out_path = os.path.join(root_dir, 'apps/landing/src/generated/docs.generated.json')
+    out_path = os.path.join(root_dir, 'apps/web/src/generated/docs.generated.json')
     
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     manifest = build_manifest(docs_dir)
