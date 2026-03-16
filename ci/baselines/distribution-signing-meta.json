@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0.0",
+  "createdAt": "2026-03-11T14:09:51.601Z",
+  "publisher": "soulism-labs",
+  "provider": "aws",
+  "keyId": "marketplace-key-1",
+  "minCliVersion": "0.1.0",
+  "channels": [
+    {
+      "channel": "openai",
+      "keyId": "marketplace-key-1",
+      "source": "aws:kms",
+      "digest": "sha256:4806139b3fb5d83c14c85b94f28f27cb527972d09df2dc615389a4dbf79babb4"
+    },
+    {
+      "channel": "claude",
+      "keyId": "marketplace-key-1",
+      "source": "aws:kms",
+      "digest": "sha256:81caad195e3ac15b468c5e9e15e1406cba66b40245a7b86cc669c72188418acb"
+    },
+    {
+      "channel": "copilot-studio",
+      "keyId": "marketplace-key-1",
+      "source": "aws:kms",
+      "digest": "sha256:11a80f9db4d994e11566e26eedb1f768fc5f5cb218e1b10c86a427f173827600"
+    },
+    {
+      "channel": "hf-space",
+      "keyId": "marketplace-key-1",
+      "source": "aws:kms",
+      "digest": "sha256:9b66365458bb2368c4150f762a995066824cb59d60049a507d9e884bfc5ae26c"
+    }
+  ],
+  "releaseId": "local"
+}

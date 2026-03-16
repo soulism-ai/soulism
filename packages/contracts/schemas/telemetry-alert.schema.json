@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cognitive.ai/telemetry-alert.schema.json",
+  "title": "TelemetryAlertPolicy",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "service",
+    "alerts",
+    "channels"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "service": {
+      "type": "string",
+      "minLength": 1
+    },
+    "alerts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "severity",
+          "metric",
+          "condition",
+          "threshold",
+          "window",
+          "for",
+          "channel",
+          "runbook"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "warning",
+              "high",
+              "critical"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "minLength": 1
+          },
+          "condition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "threshold": {
+            "type": "number"
+          },
+          "window": {
+            "type": "string",
+            "pattern": "^[0-9]+[smhd]$"
+          },
+          "for": {
+            "type": "string",
+            "pattern": "^[0-9]+[smhd]$"
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "runbook": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "channels": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "destination"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "destination": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
+

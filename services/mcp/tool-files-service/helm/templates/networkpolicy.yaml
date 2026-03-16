@@ -1,0 +1,74 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "service.fullname" . }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "service.name" . }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+{{- if .Values.networkPolicy.ingressFromApiGateway }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: soulism-edge
+          podSelector:
+            matchLabels:
+              app: api-gateway
+{{- end }}
+{{- if .Values.networkPolicy.ingressFromNginx }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+{{- end }}
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: soulism-platform
+          podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - policy-gate-service
+                  - risk-budget-service
+                  - audit-ledger-service
+                  - persona-registry-service
+                  - memory-service
+                  - tool-webfetch-service
+                  - tool-files-service
+                  - postgres
+                  - redis
+      ports:
+        - protocol: TCP
+          port: 4001
+        - protocol: TCP
+          port: 4002
+        - protocol: TCP
+          port: 4003
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+{{- end }}

@@ -1,0 +1,376 @@
+openapi: 3.1.0
+info:
+  title: Risk Budget Service API
+  version: 0.1.0
+  description: >
+    Per-persona/tool/user/tenant risk budget enforcement with deterministic
+    windowed quotas.
+paths:
+  /health:
+    get:
+      operationId: riskBudgetHealth
+      responses:
+        '200':
+          description: Service is alive.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceHealth'
+  /ready:
+    get:
+      operationId: riskBudgetReady
+      responses:
+        '200':
+          description: Service readiness.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceHealth'
+  /v1/health:
+    get:
+      operationId: riskBudgetHealthV1
+      responses:
+        '200':
+          description: Service is alive.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceHealth'
+  /v1/ready:
+    get:
+      operationId: riskBudgetReadyV1
+      responses:
+        '200':
+          description: Service readiness.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceHealth'
+  /budgets:
+    get:
+      operationId: listBudgets
+      responses:
+        '200':
+          description: Active budgets by principal scope.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BudgetSnapshot'
+  /v1/budgets:
+    get:
+      operationId: listBudgetsV1
+      responses:
+        '200':
+          description: Active budgets by principal scope.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BudgetSnapshot'
+  /budgets/check:
+    post:
+      operationId: checkBudget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetCheckRequest'
+      responses:
+        '200':
+          description: Budget check result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetCheckResponse'
+        '400':
+          description: Invalid budget request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/budgets/check:
+    post:
+      operationId: checkBudgetV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetCheckRequest'
+      responses:
+        '200':
+          description: Budget check result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetCheckResponse'
+        '400':
+          description: Invalid budget request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /budgets/reset:
+    post:
+      operationId: resetBudgets
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetResetRequest'
+      responses:
+        '200':
+          description: Budgets reset result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetResetResponse'
+  /v1/budgets/reset:
+    post:
+      operationId: resetBudgetsV1
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetResetRequest'
+      responses:
+        '200':
+          description: Budgets reset result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetResetResponse'
+components:
+  schemas:
+    ServiceHealth:
+      type: object
+      required: [ok, service]
+      properties:
+        ok:
+          type: boolean
+        ready:
+          type: boolean
+        service:
+          type: string
+    BudgetCheckRequest:
+      type: object
+      required:
+        - personaId
+        - userId
+        - tenantId
+        - tool
+        - riskClass
+      properties:
+        personaId:
+          type: string
+          minLength: 1
+        userId:
+          type: string
+          minLength: 1
+        tenantId:
+          type: string
+          minLength: 1
+        tool:
+          type: string
+          minLength: 1
+        riskClass:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+            - critical
+    BudgetSnapshot:
+      type: object
+      required:
+        - key
+        - remaining
+        - max
+        - remainingBudget
+        - maxBudget
+        - windowMs
+        - windowStartedAt
+        - windowEndsAt
+        - windowStart
+        - windowEnd
+        - nextResetAt
+        - riskClass
+      properties:
+        key:
+          type: string
+        remaining:
+          type: integer
+          minimum: 0
+        max:
+          type: integer
+          minimum: 1
+        remainingBudget:
+          type: integer
+          minimum: 0
+        maxBudget:
+          type: integer
+          minimum: 1
+        windowMs:
+          type: integer
+          minimum: 1000
+        windowStartedAt:
+          type: integer
+          minimum: 0
+        windowEndsAt:
+          type: integer
+          minimum: 0
+        windowStart:
+          type: string
+          format: date-time
+        windowEnd:
+          type: string
+          format: date-time
+        nextResetAt:
+          type: string
+          format: date-time
+        riskClass:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+            - critical
+    BudgetCheckResponse:
+      type: object
+      required:
+        - allowed
+        - state
+        - reasonCode
+        - traceId
+        - service
+        - schemaVersion
+        - policyVersion
+        - decisionId
+        - issuedAt
+        - key
+        - remaining
+        - max
+        - remainingBudget
+        - maxBudget
+        - windowMs
+        - windowStartedAt
+        - windowEndsAt
+        - windowStart
+        - windowEnd
+        - nextResetAt
+      properties:
+        allowed:
+          type: boolean
+        state:
+          type: string
+          enum:
+            - allow
+            - confirm
+            - deny
+        reasonCode:
+          type: string
+        reason:
+          type: string
+        requirements:
+          type: array
+          items:
+            type: object
+            required:
+              - type
+              - message
+            properties:
+              type:
+                type: string
+              message:
+                type: string
+              value:
+                type: string
+        traceId:
+          type: string
+        service:
+          type: string
+        policyVersion:
+          type: string
+        schemaVersion:
+          type: string
+        decisionId:
+          type: string
+        issuedAt:
+          type: string
+        key:
+          type: string
+        remaining:
+          type: integer
+        max:
+          type: integer
+        remainingBudget:
+          type: integer
+        maxBudget:
+          type: integer
+        windowMs:
+          type: integer
+        windowStartedAt:
+          type: integer
+        windowEndsAt:
+          type: integer
+        budget:
+          $ref: '#/components/schemas/BudgetSnapshot'
+        windowStart:
+          type: string
+        windowEnd:
+          type: string
+        nextResetAt:
+          type: string
+        reason:
+          type: string
+    BudgetResetRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Optional specific budget key to clear; omit to clear all.
+    BudgetResetResponse:
+      type: object
+      required:
+        - ok
+        - schemaVersion
+        - service
+        - mode
+      properties:
+        ok:
+          type: boolean
+        schemaVersion:
+          type: string
+        service:
+          type: string
+        mode:
+          type: string
+          enum:
+            - all
+            - single
+        key:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - status
+        - reasonCode
+        - traceId
+      properties:
+        error:
+          type: string
+        status:
+          type: integer
+        reasonCode:
+          type: string
+        traceId:
+          type: string
+        message:
+          type: string

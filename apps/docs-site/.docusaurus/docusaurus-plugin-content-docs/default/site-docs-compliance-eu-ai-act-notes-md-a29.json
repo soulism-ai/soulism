@@ -1,0 +1,23 @@
+{
+  "id": "compliance/eu-ai-act-notes",
+  "title": "EU AI Act Notes (Engineering)",
+  "description": "This note is implementation-facing and is not legal advice.",
+  "source": "@site/../../docs/compliance/eu-ai-act-notes.md",
+  "sourceDirName": "compliance",
+  "slug": "/compliance/eu-ai-act-notes",
+  "permalink": "/docs/compliance/eu-ai-act-notes",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Service Map",
+    "permalink": "/docs/architecture/service-map"
+  },
+  "next": {
+    "title": "ISO/IEC 42001 Mapping (Starter)",
+    "permalink": "/docs/compliance/iso-42001-mapping"
+  }
+}

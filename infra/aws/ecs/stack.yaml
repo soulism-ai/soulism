@@ -1,0 +1,1285 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Cognitive AI production stack on ECS Fargate with ALB, EFS, Redis, and Cloud Map.
+
+Parameters:
+  ClusterName:
+    Type: String
+    Default: soulism-prod
+  NamespaceName:
+    Type: String
+    Default: soulism.internal
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  SubnetA:
+    Type: AWS::EC2::Subnet::Id
+  SubnetB:
+    Type: AWS::EC2::Subnet::Id
+  SubnetC:
+    Type: AWS::EC2::Subnet::Id
+  ApiGatewayImageUri:
+    Type: String
+  WebControlPlaneImageUri:
+    Type: String
+  PolicyGateImageUri:
+    Type: String
+  RiskBudgetImageUri:
+    Type: String
+  AuditLedgerImageUri:
+    Type: String
+  PersonaRegistryImageUri:
+    Type: String
+  MemoryImageUri:
+    Type: String
+  ToolFilesImageUri:
+    Type: String
+  ToolWebfetchImageUri:
+    Type: String
+  SigningKmsKeyArn:
+    Type: String
+  SigningPublicKeySecretArn:
+    Type: String
+  GatewayAuthMode:
+    Type: String
+    Default: api-key
+    AllowedValues:
+      - api-key
+      - jwt
+  GatewayAuthJwtIssuer:
+    Type: String
+    Default: ''
+  GatewayAuthJwtAudience:
+    Type: String
+    Default: ''
+  GatewayAuthJwtJwksUrl:
+    Type: String
+    Default: ''
+  ControlPlaneRequireSessionIssuer:
+    Type: String
+    Default: 'false'
+    AllowedValues:
+      - 'true'
+      - 'false'
+  ControlPlaneAuthUsername:
+    Type: String
+    Default: ''
+  ControlPlaneAuthSubject:
+    Type: String
+    Default: platform-operator
+  ControlPlaneAuthTenantId:
+    Type: String
+    Default: platform
+  ControlPlaneAuthRoles:
+    Type: String
+    Default: operator,admin,platform
+  ControlPlaneAuthEmail:
+    Type: String
+    Default: ''
+  ControlPlaneJwtIssuer:
+    Type: String
+    Default: ''
+  ControlPlaneJwtAudience:
+    Type: String
+    Default: control-plane
+  ControlPlaneJwtAlgorithm:
+    Type: String
+    Default: ''
+  ControlPlaneJwtKeyId:
+    Type: String
+    Default: ''
+  ControlPlaneJwtExpiresInSeconds:
+    Type: String
+    Default: '3600'
+  ControlPlaneAuthPasswordSecretArn:
+    Type: String
+    Default: ''
+  ControlPlaneJwtSecretSecretArn:
+    Type: String
+    Default: ''
+  ControlPlaneJwtPrivateKeySecretArn:
+    Type: String
+    Default: ''
+  RedisNodeType:
+    Type: String
+    Default: cache.t4g.small
+  RedisEngineVersion:
+    Type: String
+    Default: '7.1'
+
+Conditions:
+  HasControlPlaneAuthPasswordSecret: !Not [!Equals [!Ref ControlPlaneAuthPasswordSecretArn, '']]
+  HasControlPlaneJwtSecretSecret: !Not [!Equals [!Ref ControlPlaneJwtSecretSecretArn, '']]
+  HasControlPlaneJwtPrivateKeySecret: !Not [!Equals [!Ref ControlPlaneJwtPrivateKeySecretArn, '']]
+
+Resources:
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Ref ClusterName
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/${ClusterName}
+      RetentionInDays: 30
+
+  Namespace:
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+    Properties:
+      Name: !Ref NamespaceName
+      Description: Internal service discovery namespace for Cognitive AI.
+      Vpc: !Ref VpcId
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Internet-facing ALB access for Cognitive AI.
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  ServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ECS task access for Cognitive AI services.
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  EfsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EFS access for Cognitive AI tasks.
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  RedisSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Redis access for Cognitive AI tasks.
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  ServiceIngressFromLoadBalancer:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref ServiceSecurityGroup
+      IpProtocol: tcp
+      FromPort: 80
+      ToPort: 8080
+      SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+
+  ServiceIngressFromSelf:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref ServiceSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref ServiceSecurityGroup
+
+  EfsIngressFromServices:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref EfsSecurityGroup
+      IpProtocol: tcp
+      FromPort: 2049
+      ToPort: 2049
+      SourceSecurityGroupId: !Ref ServiceSecurityGroup
+
+  RedisIngressFromServices:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref RedisSecurityGroup
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      SourceSecurityGroupId: !Ref ServiceSecurityGroup
+
+  SharedStateFileSystem:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      Encrypted: true
+      BackupPolicy:
+        Status: ENABLED
+      FileSystemTags:
+        - Key: Name
+          Value: !Sub ${ClusterName}-shared-state
+      LifecyclePolicies:
+        - TransitionToIA: AFTER_30_DAYS
+
+  SharedStateMountTargetA:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref SharedStateFileSystem
+      SubnetId: !Ref SubnetA
+      SecurityGroups:
+        - !Ref EfsSecurityGroup
+
+  SharedStateMountTargetB:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref SharedStateFileSystem
+      SubnetId: !Ref SubnetB
+      SecurityGroups:
+        - !Ref EfsSecurityGroup
+
+  SharedStateMountTargetC:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref SharedStateFileSystem
+      SubnetId: !Ref SubnetC
+      SecurityGroups:
+        - !Ref EfsSecurityGroup
+
+  RedisAuthTokenSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub ${ClusterName}/redis-auth-token
+      Description: Auth token for the Cognitive AI runtime Redis replication group.
+      GenerateSecretString:
+        ExcludePunctuation: true
+        PasswordLength: 40
+
+  RedisSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: Subnets for the Cognitive AI runtime Redis replication group.
+      SubnetIds:
+        - !Ref SubnetA
+        - !Ref SubnetB
+        - !Ref SubnetC
+
+  RedisReplicationGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: !Sub ${ClusterName} runtime state cache
+      Engine: redis
+      EngineVersion: !Ref RedisEngineVersion
+      CacheNodeType: !Ref RedisNodeType
+      NumNodeGroups: 1
+      ReplicasPerNodeGroup: 1
+      AutomaticFailoverEnabled: true
+      MultiAZEnabled: true
+      AutoMinorVersionUpgrade: true
+      AtRestEncryptionEnabled: true
+      TransitEncryptionEnabled: true
+      AuthToken: !Sub "{{resolve:secretsmanager:${RedisAuthTokenSecret}:SecretString}}"
+      CacheSubnetGroupName: !Ref RedisSubnetGroup
+      SecurityGroupIds:
+        - !Ref RedisSecurityGroup
+
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ClusterName}-execution
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Policies:
+        - PolicyName: !Sub ${ClusterName}-execution-secrets
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource:
+                  - !Ref GatewayApiKeySecret
+                  - !Ref SigningPublicKeySecretArn
+                  - !Ref RedisAuthTokenSecret
+                  - !If
+                    - HasControlPlaneAuthPasswordSecret
+                    - !Ref ControlPlaneAuthPasswordSecretArn
+                    - !Ref 'AWS::NoValue'
+                  - !If
+                    - HasControlPlaneJwtSecretSecret
+                    - !Ref ControlPlaneJwtSecretSecretArn
+                    - !Ref 'AWS::NoValue'
+                  - !If
+                    - HasControlPlaneJwtPrivateKeySecret
+                    - !Ref ControlPlaneJwtPrivateKeySecretArn
+                    - !Ref 'AWS::NoValue'
+
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ClusterName}-task
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub ${ClusterName}-kms-signing
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - kms:GetPublicKey
+                  - kms:Sign
+                Resource: !Ref SigningKmsKeyArn
+
+  GatewayApiKeySecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub ${ClusterName}/gateway-api-key
+      Description: Operator API key for the Cognitive AI API gateway.
+      GenerateSecretString:
+        ExcludePunctuation: true
+        PasswordLength: 40
+
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub ${ClusterName}-alb
+      Scheme: internet-facing
+      Type: application
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+      Subnets:
+        - !Ref SubnetA
+        - !Ref SubnetB
+        - !Ref SubnetC
+
+  WebTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub ${ClusterName}-web
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref VpcId
+      HealthCheckEnabled: true
+      HealthCheckPath: /health
+      Matcher:
+        HttpCode: 200
+
+  ApiGatewayTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub ${ClusterName}-api
+      Port: 8080
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref VpcId
+      HealthCheckEnabled: true
+      HealthCheckPath: /health
+      Matcher:
+        HttpCode: 200
+
+  HttpListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref WebTargetGroup
+
+  HttpListenerApiRuleSystem:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref HttpListener
+      Priority: 5
+      Conditions:
+        - Field: path-pattern
+          PathPatternConfig:
+            Values:
+              - /health
+              - /ready
+              - /metrics
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ApiGatewayTargetGroup
+
+  HttpListenerApiRuleIdentity:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref HttpListener
+      Priority: 10
+      Conditions:
+        - Field: path-pattern
+          PathPatternConfig:
+            Values:
+              - /auth/*
+              - /admin/*
+              - /personas
+              - /personas/*
+              - /persona/*
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ApiGatewayTargetGroup
+
+  HttpListenerApiRuleWorkflows:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref HttpListener
+      Priority: 20
+      Conditions:
+        - Field: path-pattern
+          PathPatternConfig:
+            Values:
+              - /policy/*
+              - /memory*
+              - /tools/*
+              - /audit
+              - /audit/*
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ApiGatewayTargetGroup
+
+  HttpListenerApiRuleBudgets:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref HttpListener
+      Priority: 30
+      Conditions:
+        - Field: path-pattern
+          PathPatternConfig:
+            Values:
+              - /budgets
+              - /budgets/*
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ApiGatewayTargetGroup
+
+  PolicyGateDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: policy-gate
+      NamespaceId: !Ref Namespace
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 10
+            Type: A
+
+  RiskBudgetDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: risk-budget
+      NamespaceId: !Ref Namespace
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 10
+            Type: A
+
+  AuditLedgerDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: audit-ledger
+      NamespaceId: !Ref Namespace
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 10
+            Type: A
+
+  PersonaRegistryDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: persona-registry
+      NamespaceId: !Ref Namespace
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 10
+            Type: A
+
+  MemoryDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: memory-service
+      NamespaceId: !Ref Namespace
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 10
+            Type: A
+
+  ToolFilesDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: tool-files
+      NamespaceId: !Ref Namespace
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 10
+            Type: A
+
+  ToolWebfetchDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: tool-webfetch
+      NamespaceId: !Ref Namespace
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 10
+            Type: A
+
+  PolicyGateTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-policy-gate
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      ContainerDefinitions:
+        - Name: policy-gate
+          Image: !Ref PolicyGateImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 4001
+              Protocol: tcp
+          Environment:
+            - Name: PORT
+              Value: '4001'
+            - Name: ALLOW_TEST_CONFIRM
+              Value: 'false'
+            - Name: RISK_BUDGET_SERVICE_URL
+              Value: !Sub http://risk-budget.${NamespaceName}:4002
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: policy-gate
+
+  RiskBudgetTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-risk-budget
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      Volumes:
+        - Name: shared-state
+          EFSVolumeConfiguration:
+            FilesystemId: !Ref SharedStateFileSystem
+            TransitEncryption: ENABLED
+      ContainerDefinitions:
+        - Name: risk-budget
+          Image: !Ref RiskBudgetImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 4002
+              Protocol: tcp
+          MountPoints:
+            - SourceVolume: shared-state
+              ContainerPath: /mnt/state
+          Environment:
+            - Name: PORT
+              Value: '4002'
+            - Name: AUDIT_SERVICE_URL
+              Value: !Sub http://audit-ledger.${NamespaceName}:4003
+            - Name: RISK_BUDGET_MAX
+              Value: '100'
+            - Name: RISK_BUDGET_WINDOW_MS
+              Value: '60000'
+            - Name: RISK_BUDGET_STORE_PATH
+              Value: /mnt/state/risk-budget/store.json
+            - Name: STATE_BACKEND
+              Value: redis
+            - Name: STATE_REDIS_HOST
+              Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Address
+            - Name: STATE_REDIS_PORT
+              Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Port
+          Secrets:
+            - Name: STATE_REDIS_PASSWORD
+              ValueFrom: !Ref RedisAuthTokenSecret
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: risk-budget
+
+  AuditLedgerTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-audit-ledger
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      Volumes:
+        - Name: shared-state
+          EFSVolumeConfiguration:
+            FilesystemId: !Ref SharedStateFileSystem
+            TransitEncryption: ENABLED
+      ContainerDefinitions:
+        - Name: audit-ledger
+          Image: !Ref AuditLedgerImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 4003
+              Protocol: tcp
+          MountPoints:
+            - SourceVolume: shared-state
+              ContainerPath: /mnt/state
+          Environment:
+            - Name: PORT
+              Value: '4003'
+            - Name: AUDIT_STORE_PATH
+              Value: /mnt/state/audit/ledger.json
+            - Name: STATE_BACKEND
+              Value: redis
+            - Name: STATE_REDIS_HOST
+              Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Address
+            - Name: STATE_REDIS_PORT
+              Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Port
+          Secrets:
+            - Name: STATE_REDIS_PASSWORD
+              ValueFrom: !Ref RedisAuthTokenSecret
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: audit-ledger
+
+  PersonaRegistryTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-persona-registry
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      Volumes:
+        - Name: shared-state
+          EFSVolumeConfiguration:
+            FilesystemId: !Ref SharedStateFileSystem
+            TransitEncryption: ENABLED
+      ContainerDefinitions:
+        - Name: persona-registry
+          Image: !Ref PersonaRegistryImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3001
+              Protocol: tcp
+          MountPoints:
+            - SourceVolume: shared-state
+              ContainerPath: /mnt/state
+          Environment:
+            - Name: PORT
+              Value: '3001'
+            - Name: PERSONA_PACKS_DIR
+              Value: /mnt/state/persona-registry/packs
+            - Name: POLICY_SERVICE_URL
+              Value: !Sub http://policy-gate.${NamespaceName}:4001
+            - Name: AUDIT_SERVICE_URL
+              Value: !Sub http://audit-ledger.${NamespaceName}:4003
+            - Name: PRODUCTION_MODE
+              Value: 'true'
+            - Name: STRICT_SIGNING
+              Value: 'true'
+            - Name: SIGNATURE_POLICY_MODE
+              Value: enforced
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: persona-registry
+
+  MemoryTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-memory
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      Volumes:
+        - Name: shared-state
+          EFSVolumeConfiguration:
+            FilesystemId: !Ref SharedStateFileSystem
+            TransitEncryption: ENABLED
+      ContainerDefinitions:
+        - Name: memory-service
+          Image: !Ref MemoryImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3002
+              Protocol: tcp
+          MountPoints:
+            - SourceVolume: shared-state
+              ContainerPath: /mnt/state
+          Environment:
+            - Name: PORT
+              Value: '3002'
+            - Name: POLICY_SERVICE_URL
+              Value: !Sub http://policy-gate.${NamespaceName}:4001
+            - Name: AUDIT_SERVICE_URL
+              Value: !Sub http://audit-ledger.${NamespaceName}:4003
+            - Name: MEMORY_STORE_PATH
+              Value: /mnt/state/memory/store.json
+            - Name: STATE_BACKEND
+              Value: redis
+            - Name: STATE_REDIS_HOST
+              Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Address
+            - Name: STATE_REDIS_PORT
+              Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Port
+          Secrets:
+            - Name: STATE_REDIS_PASSWORD
+              ValueFrom: !Ref RedisAuthTokenSecret
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: memory
+
+  ToolFilesTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-tool-files
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      Volumes:
+        - Name: shared-state
+          EFSVolumeConfiguration:
+            FilesystemId: !Ref SharedStateFileSystem
+            TransitEncryption: ENABLED
+      ContainerDefinitions:
+        - Name: tool-files
+          Image: !Ref ToolFilesImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3003
+              Protocol: tcp
+          MountPoints:
+            - SourceVolume: shared-state
+              ContainerPath: /mnt/state
+          Environment:
+            - Name: PORT
+              Value: '3003'
+            - Name: POLICY_SERVICE_URL
+              Value: !Sub http://policy-gate.${NamespaceName}:4001
+            - Name: AUDIT_SERVICE_URL
+              Value: !Sub http://audit-ledger.${NamespaceName}:4003
+            - Name: TOOL_FILES_ROOT
+              Value: /mnt/state/tool-files/files
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: tool-files
+
+  ToolWebfetchTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-tool-webfetch
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      ContainerDefinitions:
+        - Name: tool-webfetch
+          Image: !Ref ToolWebfetchImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3004
+              Protocol: tcp
+          Environment:
+            - Name: PORT
+              Value: '3004'
+            - Name: POLICY_SERVICE_URL
+              Value: !Sub http://policy-gate.${NamespaceName}:4001
+            - Name: AUDIT_SERVICE_URL
+              Value: !Sub http://audit-ledger.${NamespaceName}:4003
+            - Name: TOOL_WEBFETCH_ALLOWLIST
+              Value: openai.com,docs.cognitive.ai
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: tool-webfetch
+
+  ApiGatewayTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-api-gateway
+      Cpu: '512'
+      Memory: '1024'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      Volumes:
+        - Name: shared-state
+          EFSVolumeConfiguration:
+            FilesystemId: !Ref SharedStateFileSystem
+            TransitEncryption: ENABLED
+      ContainerDefinitions:
+        - Name: api-gateway
+          Image: !Ref ApiGatewayImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+          MountPoints:
+            - SourceVolume: shared-state
+              ContainerPath: /mnt/state
+          Environment:
+            - Name: PORT
+              Value: '8080'
+            - Name: POLICY_SERVICE_URL
+              Value: !Sub http://policy-gate.${NamespaceName}:4001
+            - Name: PERSONA_REGISTRY_URL
+              Value: !Sub http://persona-registry.${NamespaceName}:3001
+            - Name: MEMORY_SERVICE_URL
+              Value: !Sub http://memory-service.${NamespaceName}:3002
+            - Name: WEBFETCH_SERVICE_URL
+              Value: !Sub http://tool-webfetch.${NamespaceName}:3004
+            - Name: FILES_SERVICE_URL
+              Value: !Sub http://tool-files.${NamespaceName}:3003
+            - Name: AUDIT_SERVICE_URL
+              Value: !Sub http://audit-ledger.${NamespaceName}:4003
+            - Name: RISK_BUDGET_SERVICE_URL
+              Value: !Sub http://risk-budget.${NamespaceName}:4002
+            - Name: PRODUCTION_MODE
+              Value: 'true'
+            - Name: STRICT_SIGNING
+              Value: 'true'
+            - Name: SIGNATURE_POLICY_MODE
+              Value: enforced
+            - Name: REQUIRE_AUTH
+              Value: 'true'
+            - Name: AUTH_MODE
+              Value: !Ref GatewayAuthMode
+            - Name: AUTH_JWT_ISSUER
+              Value: !Ref GatewayAuthJwtIssuer
+            - Name: AUTH_JWT_AUDIENCE
+              Value: !Ref GatewayAuthJwtAudience
+            - Name: AUTH_JWT_JWKS_URL
+              Value: !Ref GatewayAuthJwtJwksUrl
+            - Name: AUTH_API_KEY_USER_ID
+              Value: platform-operator
+            - Name: AUTH_API_KEY_TENANT_ID
+              Value: platform
+            - Name: AUTH_API_KEY_ROLES
+              Value: operator,admin,platform
+            - Name: AUTH_OPERATOR_ROLES
+              Value: operator,admin,platform
+            - Name: RATE_LIMIT_STORE_PATH
+              Value: /mnt/state/gateway/rate-limit.json
+            - Name: STATE_BACKEND
+              Value: redis
+            - Name: STATE_REDIS_HOST
+              Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Address
+            - Name: STATE_REDIS_PORT
+              Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Port
+            - Name: AWS_REGION
+              Value: !Ref AWS::Region
+          Secrets:
+            - Name: API_KEY
+              ValueFrom: !Ref GatewayApiKeySecret
+            - Name: SIGNING_PUBLIC_KEY
+              ValueFrom: !Ref SigningPublicKeySecretArn
+            - Name: STATE_REDIS_PASSWORD
+              ValueFrom: !Ref RedisAuthTokenSecret
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: api-gateway
+
+  WebControlPlaneTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ClusterName}-web-control-plane
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: ARM64
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      ContainerDefinitions:
+        - Name: web-control-plane
+          Image: !Ref WebControlPlaneImageUri
+          Essential: true
+          Environment:
+            - Name: COGNITIVE_API_GATEWAY_URL
+              Value: !Sub http://${LoadBalancer.DNSName}
+            - Name: CONTROL_PLANE_REQUIRE_SESSION_ISSUER
+              Value: !Ref ControlPlaneRequireSessionIssuer
+            - Name: CONTROL_PLANE_AUTH_USERNAME
+              Value: !Ref ControlPlaneAuthUsername
+            - Name: CONTROL_PLANE_AUTH_SUBJECT
+              Value: !Ref ControlPlaneAuthSubject
+            - Name: CONTROL_PLANE_AUTH_TENANT_ID
+              Value: !Ref ControlPlaneAuthTenantId
+            - Name: CONTROL_PLANE_AUTH_ROLES
+              Value: !Ref ControlPlaneAuthRoles
+            - Name: CONTROL_PLANE_AUTH_EMAIL
+              Value: !Ref ControlPlaneAuthEmail
+            - Name: CONTROL_PLANE_JWT_ISSUER
+              Value: !Ref ControlPlaneJwtIssuer
+            - Name: CONTROL_PLANE_JWT_AUDIENCE
+              Value: !Ref ControlPlaneJwtAudience
+            - Name: CONTROL_PLANE_JWT_ALGORITHM
+              Value: !Ref ControlPlaneJwtAlgorithm
+            - Name: CONTROL_PLANE_JWT_KEY_ID
+              Value: !Ref ControlPlaneJwtKeyId
+            - Name: CONTROL_PLANE_JWT_EXPIRES_IN_SECONDS
+              Value: !Ref ControlPlaneJwtExpiresInSeconds
+          PortMappings:
+            - ContainerPort: 80
+              Protocol: tcp
+          Secrets:
+            - !If
+              - HasControlPlaneAuthPasswordSecret
+              - Name: CONTROL_PLANE_AUTH_PASSWORD
+                ValueFrom: !Ref ControlPlaneAuthPasswordSecretArn
+              - !Ref 'AWS::NoValue'
+            - !If
+              - HasControlPlaneJwtSecretSecret
+              - Name: CONTROL_PLANE_JWT_SECRET
+                ValueFrom: !Ref ControlPlaneJwtSecretSecretArn
+              - !Ref 'AWS::NoValue'
+            - !If
+              - HasControlPlaneJwtPrivateKeySecret
+              - Name: CONTROL_PLANE_JWT_PRIVATE_KEY
+                ValueFrom: !Ref ControlPlaneJwtPrivateKeySecretArn
+              - !Ref 'AWS::NoValue'
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: web-control-plane
+
+  PolicyGateService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - SharedStateMountTargetA
+      - SharedStateMountTargetB
+      - SharedStateMountTargetC
+    Properties:
+      ServiceName: policy-gate
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      TaskDefinition: !Ref PolicyGateTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      ServiceRegistries:
+        - RegistryArn: !GetAtt PolicyGateDiscoveryService.Arn
+
+  RiskBudgetService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - SharedStateMountTargetA
+      - SharedStateMountTargetB
+      - SharedStateMountTargetC
+    Properties:
+      ServiceName: risk-budget
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      TaskDefinition: !Ref RiskBudgetTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      ServiceRegistries:
+        - RegistryArn: !GetAtt RiskBudgetDiscoveryService.Arn
+
+  AuditLedgerService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - SharedStateMountTargetA
+      - SharedStateMountTargetB
+      - SharedStateMountTargetC
+    Properties:
+      ServiceName: audit-ledger
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      TaskDefinition: !Ref AuditLedgerTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      ServiceRegistries:
+        - RegistryArn: !GetAtt AuditLedgerDiscoveryService.Arn
+
+  PersonaRegistryService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - SharedStateMountTargetA
+      - SharedStateMountTargetB
+      - SharedStateMountTargetC
+    Properties:
+      ServiceName: persona-registry
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      TaskDefinition: !Ref PersonaRegistryTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      ServiceRegistries:
+        - RegistryArn: !GetAtt PersonaRegistryDiscoveryService.Arn
+
+  MemoryService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - SharedStateMountTargetA
+      - SharedStateMountTargetB
+      - SharedStateMountTargetC
+    Properties:
+      ServiceName: memory-service
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      TaskDefinition: !Ref MemoryTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      ServiceRegistries:
+        - RegistryArn: !GetAtt MemoryDiscoveryService.Arn
+
+  ToolFilesService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - SharedStateMountTargetA
+      - SharedStateMountTargetB
+      - SharedStateMountTargetC
+    Properties:
+      ServiceName: tool-files
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      TaskDefinition: !Ref ToolFilesTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      ServiceRegistries:
+        - RegistryArn: !GetAtt ToolFilesDiscoveryService.Arn
+
+  ToolWebfetchService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - SharedStateMountTargetA
+      - SharedStateMountTargetB
+      - SharedStateMountTargetC
+    Properties:
+      ServiceName: tool-webfetch
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      TaskDefinition: !Ref ToolWebfetchTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      ServiceRegistries:
+        - RegistryArn: !GetAtt ToolWebfetchDiscoveryService.Arn
+
+  ApiGatewayService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - HttpListenerApiRuleIdentity
+      - HttpListenerApiRuleSystem
+      - HttpListenerApiRuleWorkflows
+      - HttpListenerApiRuleBudgets
+      - SharedStateMountTargetA
+      - SharedStateMountTargetB
+      - SharedStateMountTargetC
+    Properties:
+      ServiceName: api-gateway
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      HealthCheckGracePeriodSeconds: 60
+      TaskDefinition: !Ref ApiGatewayTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      LoadBalancers:
+        - ContainerName: api-gateway
+          ContainerPort: 8080
+          TargetGroupArn: !Ref ApiGatewayTargetGroup
+
+  WebControlPlaneService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - HttpListener
+    Properties:
+      ServiceName: web-control-plane
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      EnableExecuteCommand: true
+      HealthCheckGracePeriodSeconds: 30
+      TaskDefinition: !Ref WebControlPlaneTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref ServiceSecurityGroup
+          Subnets:
+            - !Ref SubnetA
+            - !Ref SubnetB
+            - !Ref SubnetC
+      LoadBalancers:
+        - ContainerName: web-control-plane
+          ContainerPort: 80
+          TargetGroupArn: !Ref WebTargetGroup
+
+Outputs:
+  ClusterArn:
+    Value: !GetAtt Cluster.Arn
+  LoadBalancerDnsName:
+    Value: !GetAtt LoadBalancer.DNSName
+  ControlPlaneUrl:
+    Value: !Sub http://${LoadBalancer.DNSName}
+  GatewayApiKeySecretArn:
+    Value: !Ref GatewayApiKeySecret
+  RedisPrimaryEndpoint:
+    Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Address
+  RedisAuthTokenSecretArn:
+    Value: !Ref RedisAuthTokenSecret
+  SharedStateFileSystemId:
+    Value: !Ref SharedStateFileSystem
+  ServiceNamespaceId:
+    Value: !Ref Namespace

@@ -1,0 +1,8 @@
+{
+  "packId": "official-core",
+  "algorithm": "ed25519",
+  "digest": "sha256:44d47f0a195a84bdb47fac15ef08ea05827324ef34d2e9ce8f5d8ca0643d0f1f",
+  "signature": "sig-official-core-v1",
+  "publisher": "AOTUMN Cognitive",
+  "createdAt": "2026-02-28T00:00:00Z"
+}

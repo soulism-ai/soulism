@@ -1,0 +1,21 @@
+{
+  "id": "enterprise-example",
+  "version": "1.0.0",
+  "schemaVersion": "1.0.0",
+  "publisher": "AOTUMN Cognitive",
+  "personas": [
+    "enterprise_base",
+    "support_agent",
+    "finance_compliance"
+  ],
+  "compatibility": {
+    "runtime": "node20",
+    "personaSchema": "1.0.0"
+  },
+  "provenance": {
+    "publisher": "AOTUMN Cognitive",
+    "digest": "sha256:8c90b2cdf9b99831f761d426371eebf15921895f268139df2ff31f7195db114b",
+    "signature": "sig-enterprise-example-v1",
+    "createdAt": "2026-02-28T00:00:00Z"
+  }
+}

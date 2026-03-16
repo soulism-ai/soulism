@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tool-webfetch-service
+  labels:
+    app: tool-webfetch-service
+spec:
+  selector:
+    app: tool-webfetch-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3004
+      targetPort: 3004
+  type: ClusterIP

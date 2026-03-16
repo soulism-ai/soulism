@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "soulism-tool-files-tools",
+  "tools": [
+    {
+      "name": "files.read",
+      "description": "Read a file from an allowlisted directory",
+      "inputSchema": {
+        "type": "object"
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "files.write",
+      "description": "Write a file to an allowlisted directory",
+      "inputSchema": {
+        "type": "object"
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "files.delete",
+      "description": "Delete a file from allowlisted directory",
+      "inputSchema": {
+        "type": "object"
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    }
+  ]
+}

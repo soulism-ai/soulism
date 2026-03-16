@@ -1,0 +1,38 @@
+{
+  "$id": "https://cognitive.ai/schema/marketplace.copilot.schema.json",
+  "title": "CopilotStudioDescriptor",
+  "type": "object",
+  "required": ["name", "description", "publisher", "endpoints"],
+  "properties": {
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "publisher": { "type": "string" },
+    "version": { "type": "string" },
+    "endpoints": {
+      "type": "object",
+      "required": ["chat", "events"],
+      "properties": {
+        "chat": { "type": "string" },
+        "events": { "type": "string" }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "oauth": { "type": "string" },
+        "scopes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "runtime": { "type": "string" },
+        "schemaVersion": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": true
+}

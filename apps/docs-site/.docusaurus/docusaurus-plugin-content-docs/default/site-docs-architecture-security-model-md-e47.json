@@ -1,0 +1,23 @@
+{
+  "id": "architecture/security-model",
+  "title": "Security Model",
+  "description": "This platform is security-critical because it mediates tool execution.",
+  "source": "@site/../../docs/architecture/security-model.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/security-model",
+  "permalink": "/docs/architecture/security-model",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Release & Distribution",
+    "permalink": "/docs/architecture/release-distribution"
+  },
+  "next": {
+    "title": "Service Map",
+    "permalink": "/docs/architecture/service-map"
+  }
+}

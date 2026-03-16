@@ -1,0 +1,18 @@
+{
+  "channel": "hf-space",
+  "descriptor": "marketplace/hf/manifest.json",
+  "signingMode": "kms",
+  "keyId": "marketplace-key-1",
+  "keySource": "aws:kms",
+  "publisher": "soulism-labs",
+  "digest": "sha256:9b66365458bb2368c4150f762a995066824cb59d60049a507d9e884bfc5ae26c",
+  "signature": "MEUCIBTiGHyP9PpAWCey3emnuezVBsGrSnGvcJ2Z+DfebCCdAiEAtF8Y6TgPjfHBeTHgbcc+ovFB2/9M2vrtHN5MuUsqgxs=",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhTxNkIyDwyT6HOI4876r5PSTkxgJ\nzp0sLe7FK60VXiVN+yr1sqAadwLX1rQhcfZeQqMakm5AWwaPiVhQn9OgHg==\n-----END PUBLIC KEY-----\n",
+  "createdAt": "2026-03-11T14:09:51.601Z",
+  "compatibility": {
+    "minCliVersion": "0.1.0",
+    "runtimes": [
+      "hf-space-http"
+    ]
+  }
+}

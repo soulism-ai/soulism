@@ -1,0 +1,6 @@
+apiVersion: v2
+name: tool-webfetch-service
+description: Helm chart for tool-webfetch-service
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

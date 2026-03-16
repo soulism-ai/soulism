@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "requiredRuntimes": ["nextjs", "expo"],
+  "startupTimeoutMs": 25000,
+  "maxStartupLatencyDeltaMs": 350,
+  "maxFirstResponseDeltaMs": 180,
+  "maxP95LatencyDeltaMs": 130,
+  "maxErrorRateDelta": 0.01,
+  "maxPolicyDecisionDelta": 0.05,
+  "requirePolicyMatrixStates": ["allow", "confirm", "deny"],
+  "requireAuditHashChainValid": true
+}

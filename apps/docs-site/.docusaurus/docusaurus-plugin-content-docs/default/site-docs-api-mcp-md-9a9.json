@@ -1,0 +1,23 @@
+{
+  "id": "api/mcp",
+  "title": "MCP API Notes",
+  "description": "MCP services expose:",
+  "source": "@site/../../docs/api/mcp.md",
+  "sourceDirName": "api",
+  "slug": "/api/mcp",
+  "permalink": "/docs/api/mcp",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "AsyncAPI",
+    "permalink": "/docs/api/asyncapi"
+  },
+  "next": {
+    "title": "OpenAPI",
+    "permalink": "/docs/api/openapi"
+  }
+}

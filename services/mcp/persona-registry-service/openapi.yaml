@@ -1,0 +1,39 @@
+openapi: 3.1.0
+info:
+  title: persona-registry-service
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        '200': { description: OK }
+  /personas:
+    get:
+      operationId: listPersonas
+      responses:
+        '200': { description: OK }
+    post:
+      operationId: upsertPersonaPack
+      responses:
+        '200': { description: OK }
+  /personas/{id}:
+    get:
+      operationId: getPersona
+      responses:
+        '200': { description: OK }
+  /personas/{id}/effective:
+    get:
+      operationId: getEffectivePersona
+      responses:
+        '200': { description: OK }
+  /personas/verify:
+    post:
+      operationId: verifyPersona
+      responses:
+        '200': { description: OK }
+  /ready:
+    get:
+      operationId: ready
+      responses:
+        200: { description: Ready }

@@ -1,0 +1,23 @@
+{
+  "id": "architecture/overview",
+  "title": "Architecture Overview",
+  "description": "This platform adds a cognitive personality layer and a governed tool runtime around LLM agents.",
+  "source": "@site/../../docs/architecture/overview.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/overview",
+  "permalink": "/docs/architecture/overview",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Observability",
+    "permalink": "/docs/architecture/observability"
+  },
+  "next": {
+    "title": "Persona System",
+    "permalink": "/docs/architecture/persona-system"
+  }
+}

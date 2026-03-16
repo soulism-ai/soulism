@@ -1,0 +1,30 @@
+{
+  "id": "copilot-studio",
+  "status": "active",
+  "runtime": "http",
+  "integrationBoundary": "mcp-gateway",
+  "artifacts": [
+    "marketplace/copilot-studio/manifest.yaml",
+    "services/mcp/tool-files-service/mcp.tools.json"
+  ],
+  "channels": ["copilot-studio", "microsoft-365-copilot"],
+  "contract": {
+    "schemaVersion": "1.0.0",
+    "transport": {
+      "protocol": "http",
+      "auth": "oauth2",
+      "requestEnvelope": "mcp-http-request-v1",
+      "responseEnvelope": "mcp-http-response-v1",
+      "traceHeader": "x-trace-id"
+    },
+    "policyEnforcement": true,
+    "auditEmission": true,
+    "riskClasses": ["low", "medium", "high"],
+    "capabilities": ["persona-render", "policy-check", "tool-mediation", "marketplace-distribution"],
+    "compatibility": {
+      "minCliVersion": "0.1.0",
+      "minSdkVersion": "0.1.0",
+      "mcpSchemaVersion": "1.0.0"
+    }
+  }
+}

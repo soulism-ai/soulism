@@ -1,0 +1,29 @@
+{
+  "name": "@soulism/cli",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/cli.js",
+  "types": "dist/cli.d.ts",
+  "bin": {
+    "soulism": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "pnpm run typecheck",
+    "test": "pnpm run typecheck",
+    "smoke": "pnpm run build"
+  },
+  "dependencies": {
+    "yaml": "^2.7.0",
+    "@soulism/shared": "workspace:*",
+    "@soulism/persona-core": "workspace:*",
+    "@soulism/persona-schema": "workspace:*",
+    "@soulism/persona-signing": "workspace:*",
+    "@soulism/persona-policy": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

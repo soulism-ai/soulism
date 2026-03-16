@@ -1,0 +1,171 @@
+{
+  "schemaVersion": "1.0.0",
+  "minimumPassRate": 1,
+  "policyVersion": "v1",
+  "rules": [
+    {
+      "id": "persona-read-allow",
+      "scope": "persona:registry",
+      "riskClassMax": "high",
+      "requireSignature": false,
+      "requiresConfirmation": false,
+      "isEnabled": true
+    },
+    {
+      "id": "memory-write-confirm",
+      "scope": "memory:write",
+      "riskClassMax": "high",
+      "requireSignature": false,
+      "requiresConfirmation": true,
+      "isEnabled": true
+    },
+    {
+      "id": "fs-write-signature",
+      "scope": "filesystem:write",
+      "riskClassMax": "high",
+      "requireSignature": true,
+      "requiresConfirmation": false,
+      "isEnabled": true
+    },
+    {
+      "id": "webfetch-allow",
+      "scope": "tool:webfetch",
+      "riskClassMax": "high",
+      "requireSignature": false,
+      "requiresConfirmation": false,
+      "isEnabled": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "unknown tool denied",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "unknown:tool",
+        "action": "run",
+        "riskClass": "critical",
+        "traceId": "red-1"
+      },
+      "expected": "deny"
+    },
+    {
+      "name": "persona registry read allowed",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "persona:registry",
+        "action": "read",
+        "riskClass": "low",
+        "traceId": "red-2"
+      },
+      "expected": "allow"
+    },
+    {
+      "name": "memory write requires confirmation",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "memory:write",
+        "action": "write",
+        "riskClass": "low",
+        "traceId": "red-3"
+      },
+      "expected": "confirm"
+    },
+    {
+      "name": "filesystem write requires signature",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "filesystem:write",
+        "action": "write",
+        "riskClass": "low",
+        "traceId": "red-4"
+      },
+      "expected": "confirm"
+    },
+    {
+      "name": "webfetch allowed at high risk",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "tool:webfetch",
+        "action": "fetch",
+        "riskClass": "high",
+        "traceId": "red-5"
+      },
+      "expected": "allow"
+    },
+    {
+      "name": "webfetch denied above allowed risk",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "tool:webfetch",
+        "action": "fetch",
+        "riskClass": "critical",
+        "traceId": "red-6"
+      },
+      "expected": "deny"
+    },
+    {
+      "name": "filesystem write denied at critical risk",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "filesystem:write",
+        "action": "write",
+        "riskClass": "critical",
+        "traceId": "red-7"
+      },
+      "expected": "deny"
+    },
+    {
+      "name": "memory write confirm at medium risk",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "memory:write",
+        "action": "write",
+        "riskClass": "medium",
+        "traceId": "red-8"
+      },
+      "expected": "confirm"
+    },
+    {
+      "name": "persona registry allow at high risk",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "persona:registry",
+        "action": "read",
+        "riskClass": "high",
+        "traceId": "red-9"
+      },
+      "expected": "allow"
+    },
+    {
+      "name": "memory read denied without explicit policy rule",
+      "request": {
+        "personaId": "p1",
+        "userId": "u1",
+        "tenantId": "t1",
+        "tool": "memory:read",
+        "action": "read",
+        "riskClass": "low",
+        "traceId": "red-10"
+      },
+      "expected": "deny"
+    }
+  ]
+}

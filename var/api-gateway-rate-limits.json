@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "buckets": [
+    {
+      "key": "auth:77edd4e8e7c2a55f771196ed43927f38d36acb33ad9e6c9bbad245ae1c41578e",
+      "remaining": 115,
+      "windowStart": 1773674143048
+    },
+    {
+      "key": "auth:9b19450c55893d81fae4d6c87aae45bdf838345f3a9f7559c4f97fc0354fd20d",
+      "remaining": 119,
+      "windowStart": 1773674143107
+    },
+    {
+      "key": "auth:01714a156dba8e46ece22e4a83cf1eb3558d903e654e2d0832f9d4da9bb9f92b",
+      "remaining": 119,
+      "windowStart": 1773674143116
+    },
+    {
+      "key": "127.0.0.1",
+      "remaining": 119,
+      "windowStart": 1773674143229
+    }
+  ]
+}

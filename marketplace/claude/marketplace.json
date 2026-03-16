@@ -1,0 +1,33 @@
+{
+  "name": "Cognitive AI Governance Suite",
+  "description": "Claude-compatible governance adapter for persona policy checks and audit controls.",
+  "publisher": "AOTUMN Cognitive",
+  "api": {
+    "baseUrl": "https://api.soulism.local/claude",
+    "auth": "oauth2"
+  },
+  "capabilities": [
+    "policy.check",
+    "audit.search",
+    "risk.budget"
+  ],
+  "assets": {
+    "icon": "assets/icon.png",
+    "banner": "assets/banner.png",
+    "screenshots": [
+      "assets/screenshots/01.png",
+      "assets/screenshots/02.png",
+      "assets/screenshots/03.png"
+    ]
+  },
+  "compatibility": {
+    "runtime": "node20",
+    "schemaVersion": "1.0.0"
+  },
+  "provenance": {
+    "publisher": "AOTUMN Cognitive",
+    "digest": "sha256:ba7735da3c1c04ab31a5af8ac07413c002bc7aa3212aab44a8392208338f17c9",
+    "signature": "sig-claude-marketplace-v1",
+    "createdAt": "2026-02-28T00:00:00Z"
+  }
+}

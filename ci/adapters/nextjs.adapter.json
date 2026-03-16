@@ -1,0 +1,33 @@
+{
+  "id": "nextjs-adapter",
+  "status": "active",
+  "runtime": "edge-http",
+  "integrationBoundary": "sdk-http-transport",
+  "artifacts": [
+    "packages/mcp-sdk/src/transports/http.ts",
+    "examples/nextjs/package.json",
+    "examples/nextjs/next.config.mjs",
+    "examples/nextjs/app/page.tsx",
+    "examples/nextjs/runtime-surface.ts"
+  ],
+  "channels": ["nextjs-app-router", "nextjs-server-actions"],
+  "contract": {
+    "schemaVersion": "1.0.0",
+    "transport": {
+      "protocol": "http",
+      "auth": "api-key",
+      "requestEnvelope": "mcp-http-request-v1",
+      "responseEnvelope": "mcp-http-response-v1",
+      "traceHeader": "x-trace-id"
+    },
+    "policyEnforcement": true,
+    "auditEmission": true,
+    "riskClasses": ["low", "medium", "high"],
+    "capabilities": ["persona-render", "policy-check", "tool-mediation", "streaming-responses", "runtime-parity-surface"],
+    "compatibility": {
+      "minCliVersion": "0.1.0",
+      "minSdkVersion": "0.1.0",
+      "mcpSchemaVersion": "1.0.0"
+    }
+  }
+}

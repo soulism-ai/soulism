@@ -1,0 +1,14 @@
+1. API Gateway endpoint:
+   http://{{ .Values.services.apiGateway.host }}
+
+2. Health probe:
+   curl -i http://{{ .Values.services.apiGateway.host }}/health
+
+3. Readiness probe:
+   curl -i http://{{ .Values.services.apiGateway.host }}/ready
+
+4. Example policy check:
+   curl -X POST http://{{ .Values.services.apiGateway.host }}/policy/check \
+     -H "content-type: application/json" \
+     -H "x-api-key: local-dev-key" \
+     -d '{"personaId":"p1","userId":"u1","tenantId":"t1","tool":"tool:webfetch","action":"fetch","riskClass":"low"}'

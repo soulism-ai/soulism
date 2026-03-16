@@ -1,0 +1,23 @@
+{
+  "id": "index",
+  "title": "Documentation",
+  "description": "Start here.",
+  "source": "@site/../../docs/index.md",
+  "sourceDirName": ".",
+  "slug": "/",
+  "permalink": "/docs/",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Vendor Management Notes (Engineering)",
+    "permalink": "/docs/compliance/vendor-management"
+  },
+  "next": {
+    "title": "Breach Playbook",
+    "permalink": "/docs/runbooks/breach-playbook"
+  }
+}

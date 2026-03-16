@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: risk-budget-service
+  labels:
+    app: risk-budget-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: risk-budget-service
+  template:
+    metadata:
+      labels:
+        app: risk-budget-service
+    spec:
+      containers:
+        - name: risk-budget-service
+          image: ghcr.io/soulism/risk-budget-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 4002
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: risk-budget-service
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

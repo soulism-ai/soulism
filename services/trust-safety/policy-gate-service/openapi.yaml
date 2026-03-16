@@ -1,0 +1,214 @@
+openapi: 3.1.0
+info:
+  title: policy-gate-service
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        '200':
+          description: OK
+  /v1/health:
+    get:
+      operationId: healthV1
+      responses:
+        '200':
+          description: OK
+  /policy/check:
+    post:
+      operationId: policyCheck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyCheckRequest'
+      responses:
+        200:
+          description: decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyDecision'
+        400:
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyError'
+              example:
+                error: invalid_request
+                status: 400
+                reasonCode: invalid_request
+                traceId: policy-123
+  /v1/policy/check:
+    post:
+      operationId: policyCheckV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyCheckRequest'
+      responses:
+        200:
+          description: decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyDecision'
+        400:
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyError'
+              example:
+                error: invalid_request
+                status: 400
+                reasonCode: invalid_request
+                traceId: policy-123
+  /ready:
+    get:
+      operationId: ready
+      responses:
+        200: { description: Ready }
+  /v1/ready:
+    get:
+      operationId: readyV1
+      responses:
+        200: { description: Ready }
+components:
+  schemas:
+    PolicyBudgetSnapshot:
+      type: object
+      required:
+        - remainingBudget
+        - maxBudget
+        - windowStart
+        - windowEnd
+      properties:
+        remainingBudget:
+          type: integer
+          minimum: 0
+        maxBudget:
+          type: integer
+          minimum: 1
+        windowStart:
+          type: string
+        windowEnd:
+          type: string
+    PolicyRequirement:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+    PolicyDecision:
+      type: object
+      required:
+        - state
+        - reasonCode
+        - reason
+        - requirements
+        - budgetSnapshot
+        - traceId
+        - policyVersion
+        - decisionId
+        - schemaVersion
+        - issuedAt
+      properties:
+        state:
+          type: string
+          enum:
+            - allow
+            - confirm
+            - deny
+        reasonCode:
+          type: string
+        reason:
+          type: string
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyRequirement'
+        budgetSnapshot:
+          $ref: '#/components/schemas/PolicyBudgetSnapshot'
+        personaId:
+          type: string
+        tool:
+          type: string
+        riskClass:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+            - critical
+        traceId:
+          type: string
+        policyVersion:
+          type: string
+        decisionId:
+          type: string
+        schemaVersion:
+          type: string
+        issuedAt:
+          type: string
+    PolicyError:
+      type: object
+      required:
+        - error
+        - status
+        - reasonCode
+      properties:
+        error:
+          type: string
+        status:
+          type: integer
+        reasonCode:
+          type: string
+        traceId:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+    PolicyCheckRequest:
+      type: object
+      required:
+        - personaId
+        - userId
+        - tenantId
+        - tool
+        - action
+        - riskClass
+      properties:
+        personaId:
+          type: string
+        userId:
+          type: string
+        tenantId:
+          type: string
+        tool:
+          type: string
+        action:
+          type: string
+        riskClass:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+            - critical
+        traceId:
+          type: string

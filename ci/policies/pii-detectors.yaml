@@ -1,0 +1,7 @@
+policies:
+  - id: pii-email
+    pattern: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+    action: warn
+  - id: pii-ssn
+    pattern: '(?<!\\d)\d{3}-\d{2}-\d{4}(?!\\d)'
+    action: deny

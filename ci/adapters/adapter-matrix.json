@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-02-28T00:00:00.000Z",
+  "targets": [
+    {
+      "id": "openai-apps",
+      "status": "active",
+      "descriptor": "ci/adapters/openai.adapter.json"
+    },
+    {
+      "id": "claude-desktop",
+      "status": "active",
+      "descriptor": "ci/adapters/claude.adapter.json"
+    },
+    {
+      "id": "copilot-studio",
+      "status": "active",
+      "descriptor": "ci/adapters/copilot.adapter.json"
+    },
+    {
+      "id": "hf-space",
+      "status": "active",
+      "descriptor": "ci/adapters/hf.adapter.json"
+    },
+    {
+      "id": "web-control-plane",
+      "status": "active",
+      "descriptor": "ci/adapters/web.adapter.json"
+    },
+    {
+      "id": "nextjs-adapter",
+      "status": "active",
+      "descriptor": "ci/adapters/nextjs.adapter.json"
+    },
+    {
+      "id": "expo-adapter",
+      "status": "active",
+      "descriptor": "ci/adapters/expo.adapter.json"
+    }
+  ]
+}

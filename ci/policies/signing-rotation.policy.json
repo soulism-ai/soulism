@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "rotationIntervalDays": 90,
+  "channels": {
+    "openai": {
+      "currentKeyId": "marketplace-key-1",
+      "previousKeyId": "marketplace-key-0",
+      "rotatedAt": "2026-01-15T00:00:00.000Z"
+    },
+    "claude": {
+      "currentKeyId": "marketplace-key-1",
+      "previousKeyId": "marketplace-key-0",
+      "rotatedAt": "2026-01-15T00:00:00.000Z"
+    },
+    "copilot-studio": {
+      "currentKeyId": "marketplace-key-1",
+      "previousKeyId": "marketplace-key-0",
+      "rotatedAt": "2026-01-15T00:00:00.000Z"
+    },
+    "hf-space": {
+      "currentKeyId": "marketplace-key-1",
+      "previousKeyId": "marketplace-key-0",
+      "rotatedAt": "2026-01-15T00:00:00.000Z"
+    }
+  }
+}

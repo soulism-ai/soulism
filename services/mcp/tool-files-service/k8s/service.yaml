@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tool-files-service
+  labels:
+    app: tool-files-service
+spec:
+  selector:
+    app: tool-files-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3003
+      targetPort: 3003
+  type: ClusterIP

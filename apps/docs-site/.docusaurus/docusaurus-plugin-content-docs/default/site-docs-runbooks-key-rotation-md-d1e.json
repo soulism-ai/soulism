@@ -1,0 +1,23 @@
+{
+  "id": "runbooks/key-rotation",
+  "title": "Key Rotation",
+  "description": "Keys exist for:",
+  "source": "@site/../../docs/runbooks/key-rotation.md",
+  "sourceDirName": "runbooks",
+  "slug": "/runbooks/key-rotation",
+  "permalink": "/docs/runbooks/key-rotation",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Incident Response Runbook",
+    "permalink": "/docs/runbooks/incident-response"
+  },
+  "next": {
+    "title": "On-Call Runbook",
+    "permalink": "/docs/runbooks/oncall"
+  }
+}

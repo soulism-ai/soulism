@@ -1,0 +1,19 @@
+{
+  "id": "runbooks/sla-slo",
+  "title": "SLA / SLO (Starter)",
+  "description": "Define SLOs for:",
+  "source": "@site/../../docs/runbooks/sla-slo.md",
+  "sourceDirName": "runbooks",
+  "slug": "/runbooks/sla-slo",
+  "permalink": "/docs/runbooks/sla-slo",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Rollback Runbook",
+    "permalink": "/docs/runbooks/rollback"
+  }
+}

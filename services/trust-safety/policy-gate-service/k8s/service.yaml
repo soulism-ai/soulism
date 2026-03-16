@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: policy-gate-service
+  labels:
+    app: policy-gate-service
+spec:
+  selector:
+    app: policy-gate-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 4001
+      targetPort: 4001
+  type: ClusterIP

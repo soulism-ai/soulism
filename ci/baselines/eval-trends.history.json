@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "id": "baseline-2026-03-01",
+      "createdAt": "2026-03-01T00:00:00.000Z",
+      "releaseId": "baseline",
+      "hallucinationFailureRate": 0,
+      "redteamPassRate": 1,
+      "personaDriftStableRate": 1,
+      "jailbreakPassRate": 1,
+      "signingEnforcementPass": true
+    }
+  ]
+}
+

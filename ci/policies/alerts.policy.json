@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "service": "soulism-platform",
+  "alerts": [
+    {
+      "id": "policy-deny-spike",
+      "name": "Policy deny spike",
+      "severity": "high",
+      "metric": "policy_gate_denied_total",
+      "condition": "rate_gt",
+      "threshold": 25,
+      "window": "5m",
+      "for": "10m",
+      "channel": "pagerduty",
+      "runbook": "docs/runbooks/policy-regressions.md"
+    },
+    {
+      "id": "audit-chain-fail",
+      "name": "Audit hash-chain verification failure",
+      "severity": "critical",
+      "metric": "audit_chain_verify_failures_total",
+      "condition": "gt",
+      "threshold": 0,
+      "window": "1m",
+      "for": "1m",
+      "channel": "pagerduty",
+      "runbook": "docs/runbooks/audit-ledger.md"
+    },
+    {
+      "id": "tool-ssrf-block-spike",
+      "name": "SSRF block spike",
+      "severity": "warning",
+      "metric": "tool_webfetch_ssrf_block_total",
+      "condition": "rate_gt",
+      "threshold": 10,
+      "window": "5m",
+      "for": "10m",
+      "channel": "slack",
+      "runbook": "docs/runbooks/tool-webfetch.md"
+    },
+    {
+      "id": "p95-latency-regression",
+      "name": "Gateway p95 latency regression",
+      "severity": "high",
+      "metric": "api_gateway_latency_p95_ms",
+      "condition": "gt",
+      "threshold": 1200,
+      "window": "5m",
+      "for": "15m",
+      "channel": "slack",
+      "runbook": "docs/runbooks/oncall.md"
+    }
+  ],
+  "channels": {
+    "pagerduty": {
+      "enabled": true,
+      "destination": "soulism-prod-oncall"
+    },
+    "slack": {
+      "enabled": true,
+      "destination": "#soulism-alerts"
+    }
+  }
+}

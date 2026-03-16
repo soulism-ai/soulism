@@ -1,0 +1,23 @@
+{
+  "id": "runbooks/oncall",
+  "title": "On-Call Runbook",
+  "description": "Services",
+  "source": "@site/../../docs/runbooks/oncall.md",
+  "sourceDirName": "runbooks",
+  "slug": "/runbooks/oncall",
+  "permalink": "/docs/runbooks/oncall",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Key Rotation",
+    "permalink": "/docs/runbooks/key-rotation"
+  },
+  "next": {
+    "title": "Open-source Quick Start",
+    "permalink": "/docs/runbooks/open-source-quickstart"
+  }
+}

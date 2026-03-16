@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "minCases": 3,
+  "cases": [
+    {
+      "id": "persona-drift-01",
+      "manifest": {
+        "id": "persona-drift-01",
+        "name": "Persona Drift 01",
+        "description": "Determinism baseline A",
+        "systemPrompt": "System A",
+        "userPromptTemplate": "User A",
+        "extends": [],
+        "traits": [
+          "deterministic",
+          "precise"
+        ],
+        "allowedTools": [
+          "persona:registry"
+        ],
+        "deniedTools": [],
+        "style": {
+          "tone": "strict",
+          "constraints": [
+            "cite-reason-codes"
+          ],
+          "examples": []
+        },
+        "riskClass": "low",
+        "metadata": {
+          "version": 1
+        }
+      }
+    },
+    {
+      "id": "persona-drift-02",
+      "manifest": {
+        "id": "persona-drift-02",
+        "name": "Persona Drift 02",
+        "description": "Determinism baseline B",
+        "systemPrompt": "System B",
+        "userPromptTemplate": "User B",
+        "extends": [
+          "persona-drift-01"
+        ],
+        "traits": [
+          "deterministic",
+          "defensive"
+        ],
+        "allowedTools": [
+          "memory:read",
+          "persona:registry"
+        ],
+        "deniedTools": [
+          "filesystem:write"
+        ],
+        "style": {
+          "tone": "direct",
+          "constraints": [
+            "no-invented-facts"
+          ],
+          "examples": []
+        },
+        "riskClass": "medium",
+        "metadata": {
+          "version": 1
+        }
+      }
+    },
+    {
+      "id": "persona-drift-03",
+      "manifest": {
+        "id": "persona-drift-03",
+        "name": "Persona Drift 03",
+        "description": "Determinism baseline C",
+        "systemPrompt": "System C",
+        "userPromptTemplate": "User C",
+        "extends": [],
+        "traits": [
+          "deterministic",
+          "auditable"
+        ],
+        "allowedTools": [
+          "tool:webfetch"
+        ],
+        "deniedTools": [
+          "filesystem:write"
+        ],
+        "style": {
+          "tone": "concise",
+          "constraints": [
+            "log-tool-intent"
+          ],
+          "examples": []
+        },
+        "riskClass": "high",
+        "metadata": {
+          "version": 2
+        }
+      }
+    }
+  ]
+}
+

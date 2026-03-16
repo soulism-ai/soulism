@@ -1,0 +1,23 @@
+{
+  "id": "compliance/iso-42001-mapping",
+  "title": "ISO/IEC 42001 Mapping (Starter)",
+  "description": "ISO/IEC 42001 is an AI management system standard.",
+  "source": "@site/../../docs/compliance/iso-42001-mapping.md",
+  "sourceDirName": "compliance",
+  "slug": "/compliance/iso-42001-mapping",
+  "permalink": "/docs/compliance/iso-42001-mapping",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "EU AI Act Notes (Engineering)",
+    "permalink": "/docs/compliance/eu-ai-act-notes"
+  },
+  "next": {
+    "title": "NIST AI RMF Mapping (Starter)",
+    "permalink": "/docs/compliance/nist-ai-rmf-mapping"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "soulism-tool-webfetch-tools",
+  "tools": [
+    {
+      "name": "webfetch.fetch",
+      "description": "Perform allowlisted outbound HTTPS fetch with policy checks",
+      "inputSchema": {
+        "type": "object"
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    }
+  ]
+}

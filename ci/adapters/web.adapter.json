@@ -1,0 +1,30 @@
+{
+  "id": "web-control-plane",
+  "status": "active",
+  "runtime": "web",
+  "integrationBoundary": "operator-ui",
+  "artifacts": [
+    "apps/web-control-plane/app/page.tsx",
+    "services/edge/api-gateway/openapi.yaml"
+  ],
+  "channels": ["web-operator"],
+  "contract": {
+    "schemaVersion": "1.0.0",
+    "transport": {
+      "protocol": "http",
+      "auth": "oauth2",
+      "requestEnvelope": "operator-http-request-v1",
+      "responseEnvelope": "operator-http-response-v1",
+      "traceHeader": "x-trace-id"
+    },
+    "policyEnforcement": true,
+    "auditEmission": true,
+    "riskClasses": ["medium", "high", "critical"],
+    "capabilities": ["persona-activation", "policy-inspection", "audit-search", "budget-dashboard"],
+    "compatibility": {
+      "minCliVersion": "0.1.0",
+      "minSdkVersion": "0.1.0",
+      "mcpSchemaVersion": "1.0.0"
+    }
+  }
+}

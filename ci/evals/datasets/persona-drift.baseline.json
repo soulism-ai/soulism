@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0.0",
+  "minStableRate": 1,
+  "expectedCaseIds": [
+    "persona-drift-01",
+    "persona-drift-02",
+    "persona-drift-03"
+  ],
+  "expectedCaseFingerprints": {
+    "persona-drift-01": "6607796594f07d511eef669b12ddf2aa8f1ea9b4e5f2e26dcea63fc79994154b",
+    "persona-drift-02": "af46dd72ee1b2663b661a251f24fdc7acd6a3d6a6bac41bdad50fa9c9e072154",
+    "persona-drift-03": "14d8019aaadc9781e4a0192ced50d469aca09fcce53c83134dad5c73d70dbdc0"
+  ]
+}

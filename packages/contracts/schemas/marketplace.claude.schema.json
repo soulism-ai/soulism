@@ -1,0 +1,32 @@
+{
+  "$id": "https://cognitive.ai/schema/marketplace.claude.schema.json",
+  "title": "ClaudeMarketplaceDescriptor",
+  "type": "object",
+  "required": ["name", "description", "publisher", "api"],
+  "properties": {
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "publisher": { "type": "string" },
+    "version": { "type": "string" },
+    "api": {
+      "type": "object",
+      "required": ["baseUrl", "auth"],
+      "properties": {
+        "baseUrl": { "type": "string" },
+        "auth": { "type": "string" }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "runtime": { "type": "string" },
+        "schemaVersion": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "service": "soulism-platform",
+  "collectors": [
+    {
+      "name": "otel-primary",
+      "endpoint": "otel-collector.soulism.svc.cluster.local:4317",
+      "protocol": "otlp/grpc"
+    }
+  ],
+  "exporters": [
+    {
+      "name": "otlp-observability-backend",
+      "type": "otlphttp",
+      "endpoint": "https://observability.example.com/v1/otlp"
+    },
+    {
+      "name": "structured-logging",
+      "type": "logging",
+      "endpoint": "stdout"
+    }
+  ],
+  "serviceLevelObjectives": [
+    {
+      "id": "gateway-p95-latency",
+      "metric": "api_gateway_latency_p95_ms",
+      "target": 1200,
+      "window": "30d"
+    },
+    {
+      "id": "policy-deny-error-budget",
+      "metric": "policy_gate_denied_total",
+      "target": 25,
+      "window": "1h"
+    }
+  ],
+  "alertRouting": [
+    {
+      "severity": "critical",
+      "channel": "pagerduty",
+      "target": "soulism-prod-oncall"
+    },
+    {
+      "severity": "high",
+      "channel": "slack",
+      "target": "#soulism-alerts"
+    },
+    {
+      "severity": "warning",
+      "channel": "slack",
+      "target": "#soulism-alerts"
+    }
+  ]
+}

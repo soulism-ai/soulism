@@ -1,0 +1,31 @@
+{
+  "id": "hf-space",
+  "status": "active",
+  "runtime": "http",
+  "integrationBoundary": "gateway-rest",
+  "artifacts": [
+    "examples/hf/runtime-surface.ts",
+    "apps/hf-space/app.py",
+    "marketplace/hf/manifest.json"
+  ],
+  "channels": ["huggingface-space"],
+  "contract": {
+    "schemaVersion": "1.0.0",
+    "transport": {
+      "protocol": "http",
+      "auth": "api-key",
+      "requestEnvelope": "mcp-http-request-v1",
+      "responseEnvelope": "mcp-http-response-v1",
+      "traceHeader": "x-trace-id"
+    },
+    "policyEnforcement": true,
+    "auditEmission": true,
+    "riskClasses": ["low", "medium", "high"],
+    "capabilities": ["persona-render", "policy-check", "tool-mediation"],
+    "compatibility": {
+      "minCliVersion": "0.1.0",
+      "minSdkVersion": "0.1.0",
+      "mcpSchemaVersion": "1.0.0"
+    }
+  }
+}

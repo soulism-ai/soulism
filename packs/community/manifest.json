@@ -1,0 +1,20 @@
+{
+  "id": "community",
+  "version": "1.0.0",
+  "schemaVersion": "1.0.0",
+  "publisher": "AOTUMN Cognitive",
+  "personas": [
+    "community_guide",
+    "community_moderator"
+  ],
+  "compatibility": {
+    "runtime": "node20",
+    "personaSchema": "1.0.0"
+  },
+  "provenance": {
+    "publisher": "AOTUMN Cognitive",
+    "digest": "sha256:8f8bc3fd4f8b1a1b7f8f2c6d3a1f0f2f4dfdf8d9d2b6f3a9f1f0e3f8d4c2e1d4",
+    "signature": "sig-community-pack-v1",
+    "createdAt": "2026-02-28T00:00:00Z"
+  }
+}

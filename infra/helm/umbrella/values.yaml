@@ -1,0 +1,30 @@
+global:
+  imagePullPolicy: IfNotPresent
+  namespace: soulism
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+services:
+  apiGateway:
+    enabled: true
+    namespace: soulism-edge
+    host: api.cognitive.local
+  policyGate:
+    enabled: true
+  auditLedger:
+    enabled: true
+  riskBudget:
+    enabled: true
+  personaRegistry:
+    enabled: true
+  memory:
+    enabled: true
+  toolWebfetch:
+    enabled: true
+  toolFiles:
+    enabled: true

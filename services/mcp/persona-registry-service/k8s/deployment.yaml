@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: persona-registry-service
+  labels:
+    app: persona-registry-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: persona-registry-service
+  template:
+    metadata:
+      labels:
+        app: persona-registry-service
+    spec:
+      containers:
+        - name: persona-registry-service
+          image: ghcr.io/soulism/persona-registry-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3001
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: persona-registry-service
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

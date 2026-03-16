@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "providers": {
+    "aws": {
+      "enabled": true,
+      "keyId": "marketplace-key-1",
+      "region": "us-east-1",
+      "algorithm": "ed25519",
+      "allowMockInCi": true
+    },
+    "gcp": {
+      "enabled": true,
+      "keyId": "marketplace-key-1",
+      "project": "soulism-staging",
+      "location": "us-east1",
+      "algorithm": "ed25519",
+      "allowMockInCi": true
+    },
+    "azure": {
+      "enabled": true,
+      "keyId": "marketplace-key-1",
+      "vault": "soulism-kv-staging",
+      "algorithm": "ed25519",
+      "allowMockInCi": true
+    }
+  }
+}

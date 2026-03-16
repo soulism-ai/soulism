@@ -1,0 +1,6 @@
+apiVersion: v2
+name: persona-registry-service
+description: Helm chart for persona-registry-service
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

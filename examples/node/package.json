@@ -1,0 +1,13 @@
+{
+  "name": "@soulism/example-node-client",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "http": "tsx src/http-client.ts",
+    "stdio": "tsx src/stdio-client.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$id": "https://cognitive.ai/schema/persona.schema.json",
+  "title": "PersonaManifest",
+  "type": "object",
+  "required": ["id", "version", "schemaVersion", "persona"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-zA-Z0-9_.-]+$" },
+    "version": { "type": "string" },
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "persona": { "type": "object" }
+  },
+  "additionalProperties": true
+}

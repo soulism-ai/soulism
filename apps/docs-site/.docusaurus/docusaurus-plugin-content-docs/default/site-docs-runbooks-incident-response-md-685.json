@@ -1,0 +1,23 @@
+{
+  "id": "runbooks/incident-response",
+  "title": "Incident Response Runbook",
+  "description": "Severity levels",
+  "source": "@site/../../docs/runbooks/incident-response.md",
+  "sourceDirName": "runbooks",
+  "slug": "/runbooks/incident-response",
+  "permalink": "/docs/runbooks/incident-response",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Disaster Recovery",
+    "permalink": "/docs/runbooks/disaster-recovery"
+  },
+  "next": {
+    "title": "Key Rotation",
+    "permalink": "/docs/runbooks/key-rotation"
+  }
+}

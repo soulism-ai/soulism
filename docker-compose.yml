@@ -1,0 +1,146 @@
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/edge/api-gateway/Dockerfile
+    environment:
+      PORT: 8080
+      POLICY_SERVICE_URL: http://policy-gate:4001
+      PERSONA_REGISTRY_URL: http://persona-registry:3001
+      MEMORY_SERVICE_URL: http://memory-service:3002
+      WEBFETCH_SERVICE_URL: http://tool-webfetch:3004
+      FILES_SERVICE_URL: http://tool-files:3003
+      AUDIT_SERVICE_URL: http://audit-ledger:4003
+      RISK_BUDGET_SERVICE_URL: http://risk-budget:4002
+      STATE_BACKEND: redis
+      STATE_REDIS_URL: redis://redis:6379
+      REQUIRE_AUTH: true
+      AUTH_MODE: jwt
+      AUTH_JWT_ISSUER: soulism-local
+      AUTH_JWT_AUDIENCE: control-plane
+      AUTH_JWT_SECRET: soulism-local-dev-secret
+      AUTH_OPERATOR_ROLES: operator,admin,platform
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - policy-gate
+      - risk-budget
+      - audit-ledger
+      - persona-registry
+      - memory-service
+      - tool-files
+      - tool-webfetch
+
+  web-control-plane:
+    build:
+      context: .
+      dockerfile: apps/web-control-plane/Dockerfile
+    environment:
+      COGNITIVE_API_GATEWAY_URL: http://api-gateway:8080
+      CONTROL_PLANE_REQUIRE_SESSION_ISSUER: true
+      CONTROL_PLANE_AUTH_USERNAME: operator
+      CONTROL_PLANE_AUTH_PASSWORD: localdev
+      CONTROL_PLANE_AUTH_SUBJECT: operator
+      CONTROL_PLANE_AUTH_TENANT_ID: default
+      CONTROL_PLANE_AUTH_ROLES: operator,admin
+      CONTROL_PLANE_AUTH_EMAIL: operator@localhost
+      CONTROL_PLANE_JWT_ISSUER: soulism-local
+      CONTROL_PLANE_JWT_AUDIENCE: control-plane
+      CONTROL_PLANE_JWT_SECRET: soulism-local-dev-secret
+      CONTROL_PLANE_JWT_ALGORITHM: HS256
+      PORT: 80
+    ports:
+      - "3000:80"
+    depends_on:
+      - api-gateway
+
+  policy-gate:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: ["sh", "-lc", "corepack enable && pnpm --filter @soulism/policy-gate-service build && node services/trust-safety/policy-gate-service/dist/main.js"]
+    volumes:
+      - ./:/workspace
+    environment:
+      PORT: 4001
+      RISK_BUDGET_SERVICE_URL: http://risk-budget:4002
+
+  risk-budget:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: ["sh", "-lc", "corepack enable && pnpm --filter @soulism/risk-budget-service build && node services/trust-safety/risk-budget-service/dist/main.js"]
+    volumes:
+      - ./:/workspace
+    environment:
+      PORT: 4002
+      STATE_BACKEND: redis
+      STATE_REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis
+
+  audit-ledger:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: ["sh", "-lc", "corepack enable && pnpm --filter @soulism/audit-ledger-service build && node services/trust-safety/audit-ledger-service/dist/main.js"]
+    volumes:
+      - ./:/workspace
+    environment:
+      PORT: 4003
+      STATE_BACKEND: redis
+      STATE_REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis
+
+  persona-registry:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: ["sh", "-lc", "corepack enable && pnpm --filter @soulism/persona-registry-service build && node services/mcp/persona-registry-service/dist/main.js"]
+    volumes:
+      - ./:/workspace
+    environment:
+      PORT: 3001
+      PERSONA_PACKS_DIR: /workspace/packs
+      POLICY_SERVICE_URL: http://policy-gate:4001
+      SIGNATURE_POLICY_MODE: dev
+
+  memory-service:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: ["sh", "-lc", "corepack enable && pnpm --filter @soulism/memory-service build && node services/mcp/memory-service/dist/main.js"]
+    volumes:
+      - ./:/workspace
+    environment:
+      PORT: 3002
+      POLICY_SERVICE_URL: http://policy-gate:4001
+      STATE_BACKEND: redis
+      STATE_REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis
+
+  tool-files:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: ["sh", "-lc", "corepack enable && pnpm --filter @soulism/tool-files-service build && node services/mcp/tool-files-service/dist/main.js"]
+    volumes:
+      - ./:/workspace
+    environment:
+      PORT: 3003
+      POLICY_SERVICE_URL: http://policy-gate:4001
+      TOOL_FILES_ROOT: /workspace/testdata/files
+
+  tool-webfetch:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: ["sh", "-lc", "corepack enable && pnpm --filter @soulism/tool-webfetch-service build && node services/mcp/tool-webfetch-service/dist/main.js"]
+    volumes:
+      - ./:/workspace
+    environment:
+      PORT: 3004
+      POLICY_SERVICE_URL: http://policy-gate:4001
+      TOOL_WEBFETCH_ALLOWLIST: openai.com,example.com

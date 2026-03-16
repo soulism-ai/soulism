@@ -1,0 +1,23 @@
+{
+  "id": "architecture/service-map",
+  "title": "Service Map",
+  "description": "This document lists services, responsibilities, and dependencies.",
+  "source": "@site/../../docs/architecture/service-map.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/service-map",
+  "permalink": "/docs/architecture/service-map",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Security Model",
+    "permalink": "/docs/architecture/security-model"
+  },
+  "next": {
+    "title": "EU AI Act Notes (Engineering)",
+    "permalink": "/docs/compliance/eu-ai-act-notes"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Cognitive AI HF Space",
+  "description": "Policy-gated persona runtime for Hugging Face Spaces with policy checks, audit evidence, and MCP tool mediation.",
+  "publisher": "AOTUMN Cognitive",
+  "version": "1.0.0",
+  "endpoints": {
+    "space": "https://huggingface.co/spaces/aotumn/soulism",
+    "api": "https://api.soulism.local",
+    "health": "https://api.soulism.local/health"
+  },
+  "capabilities": [
+    "persona.render",
+    "policy.check",
+    "tool.mediation",
+    "audit.query",
+    "risk.budget.snapshot"
+  ],
+  "assets": {
+    "icon": "assets/icon.png",
+    "banner": "assets/banner.png",
+    "screenshots": [
+      "assets/screenshots/01.png",
+      "assets/screenshots/02.png"
+    ]
+  },
+  "compatibility": {
+    "runtime": "node20",
+    "schemaVersion": "1.0.0"
+  },
+  "provenance": {
+    "publisher": "AOTUMN Cognitive",
+    "digest": "sha256:a555f7b8be847842dc7cd0273f228ee3aaf7e787690acfa29ebd3a4f27c69471",
+    "signature": "tAAmGgJenQ80dl0L4wpvXdI2A3e5jvdTIhgGS08DYXkjT49BKKNLuLV2KkZcZt48CX/3EYWeat2TGZKJRS0TAw==",
+    "createdAt": "2026-02-28T00:00:00Z"
+  }
+}

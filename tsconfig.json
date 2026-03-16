@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@soulism/shared": [
+        "packages/shared/src/index.ts"
+      ],
+      "@soulism/shared/*.js": [
+        "packages/shared/src/*.ts"
+      ],
+      "@soulism/persona-policy": [
+        "packages/persona-policy/src/index.ts"
+      ],
+      "@soulism/persona-policy/*.js": [
+        "packages/persona-policy/src/*.ts"
+      ],
+      "@soulism/persona-core": [
+        "packages/persona-core/src/index.ts"
+      ],
+      "@soulism/persona-core/*.js": [
+        "packages/persona-core/src/*.ts"
+      ],
+      "@soulism/persona-schema": [
+        "packages/persona-schema/src/index.ts"
+      ],
+      "@soulism/persona-schema/*.js": [
+        "packages/persona-schema/src/*.ts"
+      ],
+      "@soulism/persona-signing": [
+        "packages/persona-signing/src/index.ts"
+      ],
+      "@soulism/persona-signing/*.js": [
+        "packages/persona-signing/src/*.ts"
+      ]
+    }
+  }
+}

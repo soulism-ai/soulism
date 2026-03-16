@@ -1,0 +1,6 @@
+* @soulism/core-maintainers
+/services/trust-safety/ @soulism/security
+/services/mcp/ @soulism/platform
+/services/edge/ @soulism/platform
+/packages/persona-* @soulism/persona
+/.github/workflows/ @soulism/release

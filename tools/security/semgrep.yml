@@ -1,0 +1,85 @@
+rules:
+  - id: risky-node-child-process-exec
+    message: "Avoid child_process exec-family calls; require approval and audit wrapper in CLI."
+    severity: ERROR
+    languages:
+      - typescript
+      - javascript
+    patterns:
+      - pattern-either:
+          - pattern: |
+              import $CP from 'node:child_process'
+              ...
+              $CP.exec($ARGS)
+          - pattern: |
+              import $CP from 'child_process'
+              ...
+              $CP.exec($ARGS)
+          - pattern: |
+              import $CP from 'node:child_process'
+              ...
+              $CP.execSync($ARGS)
+          - pattern: |
+              import $CP from 'child_process'
+              ...
+              $CP.execSync($ARGS)
+          - pattern: |
+              const $REQ = require('node:child_process')
+              ...
+              $REQ.exec($ARGS)
+          - pattern: |
+              const $REQ = require('child_process')
+              ...
+              $REQ.exec($ARGS)
+          - pattern: |
+              const $REQ = require('node:child_process')
+              ...
+              $REQ.execSync($ARGS)
+          - pattern: |
+              const $REQ = require('child_process')
+              ...
+              $REQ.execSync($ARGS)
+          - pattern: |
+              const $REQ = require('node:child_process')
+              ...
+              $REQ.spawnSync($ARGS)
+          - pattern: |
+              const $REQ = require('child_process')
+              ...
+              $REQ.spawnSync($ARGS)
+
+  - id: risky-eval-or-function
+    message: "Avoid runtime code execution via eval or dynamic Function constructor."
+    severity: ERROR
+    languages:
+      - typescript
+      - javascript
+    patterns:
+      - pattern-either:
+          - pattern: eval($X)
+          - pattern: new Function($ARGS)
+          - pattern: Function($ARGS)
+
+  - id: unsafe-xml-or-html-injection-template
+    message: "Potential template injection sink in user-supplied HTML/XML construction path."
+    severity: WARNING
+    languages:
+      - typescript
+      - javascript
+    patterns:
+      - pattern-either:
+          - pattern: |
+              innerHTML = $X
+          - pattern: |
+              unsafeHTML($X)
+          - pattern: |
+              $DOC.querySelector($SEL).innerHTML = $X
+
+exclude:
+  - .git
+  - node_modules
+  - .turbo
+  - .next
+  - dist
+  - coverage
+  - infra

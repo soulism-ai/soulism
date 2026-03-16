@@ -1,0 +1,23 @@
+{
+  "id": "architecture/persona-system",
+  "title": "Persona System",
+  "description": "Personas are versioned, composable artifacts that influence agent behavior.",
+  "source": "@site/../../docs/architecture/persona-system.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/persona-system",
+  "permalink": "/docs/architecture/persona-system",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Architecture Overview",
+    "permalink": "/docs/architecture/overview"
+  },
+  "next": {
+    "title": "Policy Gates",
+    "permalink": "/docs/architecture/policy-gates"
+  }
+}

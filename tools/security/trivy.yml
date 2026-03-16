@@ -1,0 +1,27 @@
+format: json
+scan:
+  scanners:
+    - vuln
+    - secret
+    - misconfig
+    - license
+timeout: 10m
+severity:
+  - CRITICAL
+  - HIGH
+  - MEDIUM
+ignore-unfixed: false
+vuln-type:
+  - os
+  - library
+skip-dirs:
+  - node_modules
+  - dist
+  - .git
+  - .turbo
+  - .next
+  - coverage
+  - ci/baselines
+  - out
+misconfiguration:
+  include-non-failures: true

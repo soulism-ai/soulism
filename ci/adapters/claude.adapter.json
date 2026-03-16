@@ -1,0 +1,30 @@
+{
+  "id": "claude-desktop",
+  "status": "active",
+  "runtime": "http",
+  "integrationBoundary": "mcp-gateway",
+  "artifacts": [
+    "marketplace/claude/marketplace.json",
+    "services/mcp/persona-registry-service/mcp.tools.json"
+  ],
+  "channels": ["claude-marketplace", "claude-desktop"],
+  "contract": {
+    "schemaVersion": "1.0.0",
+    "transport": {
+      "protocol": "http",
+      "auth": "api-key",
+      "requestEnvelope": "mcp-http-request-v1",
+      "responseEnvelope": "mcp-http-response-v1",
+      "traceHeader": "x-trace-id"
+    },
+    "policyEnforcement": true,
+    "auditEmission": true,
+    "riskClasses": ["low", "medium", "high"],
+    "capabilities": ["persona-render", "policy-check", "tool-mediation", "marketplace-distribution"],
+    "compatibility": {
+      "minCliVersion": "0.1.0",
+      "minSdkVersion": "0.1.0",
+      "mcpSchemaVersion": "1.0.0"
+    }
+  }
+}

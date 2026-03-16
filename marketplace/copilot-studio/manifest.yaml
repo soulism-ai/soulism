@@ -1,0 +1,26 @@
+name: Cognitive AI Copilot Adapter
+description: Copilot Studio integration for policy-gated persona and tool orchestration.
+publisher: AOTUMN Cognitive
+assets:
+  icon: assets/icon.png
+  banner: assets/banner.png
+  screenshots:
+    - assets/screenshots/01.png
+    - assets/screenshots/02.png
+endpoints:
+  chat: https://api.soulism.local/copilot/chat
+  events: https://api.soulism.local/copilot/events
+security:
+  oauth: https://auth.soulism.local/oauth
+  scopes:
+    - tools.read
+    - tools.execute
+    - audit.read
+compatibility:
+  runtime: node20
+  schemaVersion: 1.0.0
+provenance:
+  publisher: AOTUMN Cognitive
+  digest: sha256:a8d0e4c44ec361eba13b06c866876c1dbb7af3e50c97a0c250faf537f0cc9b75
+  signature: sig-copilot-manifest-v1
+  createdAt: "2026-02-28T00:00:00Z"

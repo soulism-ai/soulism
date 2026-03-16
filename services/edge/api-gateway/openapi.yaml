@@ -1,0 +1,26 @@
+openapi: 3.1.0
+info:
+  title: api-gateway
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      operationId: health
+      responses: { '200': { description: OK } }
+  /policy/check:
+    post:
+      operationId: policyCheck
+      responses: { '200': { description: OK } }
+  /persona/{id}:
+    get:
+      operationId: personaById
+      responses: { '200': { description: OK } }
+  /memory/{scope}:
+    get:
+      operationId: memoryScope
+      responses: { '200': { description: OK } }
+  /ready:
+    get:
+      operationId: ready
+      responses:
+        200: { description: Ready }

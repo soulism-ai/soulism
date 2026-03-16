@@ -1,0 +1,23 @@
+{
+  "id": "architecture/release-distribution",
+  "title": "Release & Distribution",
+  "description": "This repo ships multiple artifact types.",
+  "source": "@site/../../docs/architecture/release-distribution.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/release-distribution",
+  "permalink": "/docs/architecture/release-distribution",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Policy Gates",
+    "permalink": "/docs/architecture/policy-gates"
+  },
+  "next": {
+    "title": "Security Model",
+    "permalink": "/docs/architecture/security-model"
+  }
+}

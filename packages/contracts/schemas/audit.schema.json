@@ -1,0 +1,16 @@
+{
+  "$id": "https://cognitive.ai/schema/audit.schema.json",
+  "title": "AuditEvent",
+  "type": "object",
+  "required": ["schemaVersion", "id", "service", "timestamp", "action", "principal"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "id": { "type": "string" },
+    "service": { "type": "string" },
+    "timestamp": { "type": "string" },
+    "action": { "type": "string" },
+    "principal": { "type": "string" },
+    "resource": { "type": "string" },
+    "metadata": { "type": "object" }
+  }
+}

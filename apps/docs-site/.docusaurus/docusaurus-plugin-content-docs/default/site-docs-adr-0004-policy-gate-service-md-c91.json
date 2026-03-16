@@ -1,0 +1,24 @@
+{
+  "id": "adr/policy-gate-service",
+  "title": "ADR 0004: Central policy gate service for tool decisions",
+  "description": "- Status: Accepted",
+  "source": "@site/../../docs/adr/0004-policy-gate-service.md",
+  "sourceDirName": "adr",
+  "slug": "/adr/policy-gate-service",
+  "permalink": "/docs/adr/policy-gate-service",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "ADR 0003: Persona pack format (manifest + personas + signatures)",
+    "permalink": "/docs/adr/persona-pack-format"
+  },
+  "next": {
+    "title": "ADR 0005: Append-only audit ledger with hash chaining",
+    "permalink": "/docs/adr/audit-ledger-append-only"
+  }
+}

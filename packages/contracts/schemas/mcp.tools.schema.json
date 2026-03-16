@@ -1,0 +1,22 @@
+{
+  "$id": "https://cognitive.ai/schema/mcp-tools.schema.json",
+  "title": "McpTools",
+  "type": "object",
+  "required": ["tools"],
+  "properties": {
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "inputSchema"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "inputSchema": { "type": "object" },
+          "outputSchema": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "lintFailingFiles": 0,
+  "typecheckFailingFiles": 0,
+  "testFailingFiles": 0,
+  "smokeFailingTests": 0,
+  "maxSeverity": "high"
+}

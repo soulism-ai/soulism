@@ -1,0 +1,10 @@
+tools:
+  - name: webfetch
+    domains:
+      - openai.com
+      - docs.cognitive.ai
+  - name: files
+    extensions:
+      - .txt
+      - .md
+      - .json

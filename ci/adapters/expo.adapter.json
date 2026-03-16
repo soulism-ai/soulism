@@ -1,0 +1,33 @@
+{
+  "id": "expo-adapter",
+  "status": "active",
+  "runtime": "mobile-http",
+  "integrationBoundary": "sdk-http-transport",
+  "artifacts": [
+    "packages/mcp-sdk/src/client.ts",
+    "examples/expo/package.json",
+    "examples/expo/app.json",
+    "examples/expo/App.tsx",
+    "examples/expo/runtime-surface.ts"
+  ],
+  "channels": ["expo", "react-native"],
+  "contract": {
+    "schemaVersion": "1.0.0",
+    "transport": {
+      "protocol": "http",
+      "auth": "api-key",
+      "requestEnvelope": "mcp-http-request-v1",
+      "responseEnvelope": "mcp-http-response-v1",
+      "traceHeader": "x-trace-id"
+    },
+    "policyEnforcement": true,
+    "auditEmission": true,
+    "riskClasses": ["low", "medium", "high"],
+    "capabilities": ["persona-render", "policy-check", "tool-mediation", "mobile-sync", "runtime-parity-surface"],
+    "compatibility": {
+      "minCliVersion": "0.1.0",
+      "minSdkVersion": "0.1.0",
+      "mcpSchemaVersion": "1.0.0"
+    }
+  }
+}

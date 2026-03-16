@@ -1,0 +1,233 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "index",
+          "docs": [
+            {
+              "id": "adr/audit-ledger-append-only",
+              "path": "/docs/adr/audit-ledger-append-only",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "adr/mcp-transport-http-stdio",
+              "path": "/docs/adr/mcp-transport-http-stdio",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "adr/memory-store-hybrid",
+              "path": "/docs/adr/memory-store-hybrid",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "adr/monorepo-pnpm-turbo",
+              "path": "/docs/adr/monorepo-pnpm-turbo",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "adr/persona-pack-format",
+              "path": "/docs/adr/persona-pack-format",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "adr/policy-gate-service",
+              "path": "/docs/adr/policy-gate-service",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "adr/release-signing",
+              "path": "/docs/adr/release-signing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "adr/telemetry-privacy",
+              "path": "/docs/adr/telemetry-privacy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "adr/tool-sandboxing",
+              "path": "/docs/adr/tool-sandboxing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/asyncapi",
+              "path": "/docs/api/asyncapi",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/mcp",
+              "path": "/docs/api/mcp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/openapi",
+              "path": "/docs/api/openapi",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/audit-logging",
+              "path": "/docs/architecture/audit-logging",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/data-flows",
+              "path": "/docs/architecture/data-flows",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/identity-access",
+              "path": "/docs/architecture/identity-access",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/memory-model",
+              "path": "/docs/architecture/memory-model",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/observability",
+              "path": "/docs/architecture/observability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/overview",
+              "path": "/docs/architecture/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/persona-system",
+              "path": "/docs/architecture/persona-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/policy-gates",
+              "path": "/docs/architecture/policy-gates",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/release-distribution",
+              "path": "/docs/architecture/release-distribution",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/security-model",
+              "path": "/docs/architecture/security-model",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/service-map",
+              "path": "/docs/architecture/service-map",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "compliance/eu-ai-act-notes",
+              "path": "/docs/compliance/eu-ai-act-notes",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "compliance/iso-42001-mapping",
+              "path": "/docs/compliance/iso-42001-mapping",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "compliance/nist-ai-rmf-mapping",
+              "path": "/docs/compliance/nist-ai-rmf-mapping",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "compliance/pii-policy",
+              "path": "/docs/compliance/pii-policy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "compliance/privacy",
+              "path": "/docs/compliance/privacy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "compliance/responsible-ai",
+              "path": "/docs/compliance/responsible-ai",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "compliance/risk-register",
+              "path": "/docs/compliance/risk-register",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "compliance/vendor-management",
+              "path": "/docs/compliance/vendor-management",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "index",
+              "path": "/docs/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/breach-playbook",
+              "path": "/docs/runbooks/breach-playbook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/data-retention",
+              "path": "/docs/runbooks/data-retention",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/disaster-recovery",
+              "path": "/docs/runbooks/disaster-recovery",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/incident-response",
+              "path": "/docs/runbooks/incident-response",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/key-rotation",
+              "path": "/docs/runbooks/key-rotation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/oncall",
+              "path": "/docs/runbooks/oncall",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/open-source-quickstart",
+              "path": "/docs/runbooks/open-source-quickstart",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/rollback",
+              "path": "/docs/runbooks/rollback",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "runbooks/sla-slo",
+              "path": "/docs/runbooks/sla-slo",
+              "sidebar": "tutorialSidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "tutorialSidebar": {
+              "link": {
+                "path": "/docs/adr/monorepo-pnpm-turbo",
+                "label": "adr/monorepo-pnpm-turbo"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

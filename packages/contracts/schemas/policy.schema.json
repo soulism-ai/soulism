@@ -1,0 +1,15 @@
+{
+  "$id": "https://cognitive.ai/schema/policy.schema.json",
+  "title": "PolicyRequest",
+  "type": "object",
+  "required": ["personaId", "userId", "tenantId", "tool", "action", "riskClass"],
+  "properties": {
+    "personaId": { "type": "string" },
+    "userId": { "type": "string" },
+    "tenantId": { "type": "string" },
+    "tool": { "type": "string" },
+    "action": { "type": "string" },
+    "riskClass": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+  },
+  "additionalProperties": true
+}

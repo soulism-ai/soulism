@@ -1,0 +1,11 @@
+.hero {
+  font-family: Inter, Arial, sans-serif;
+}
+
+main {
+  line-height: 1.55;
+}
+
+li {
+  margin: 8px 0;
+}

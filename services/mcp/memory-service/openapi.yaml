@@ -1,0 +1,30 @@
+openapi: 3.1.0
+info:
+  title: memory-service
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        '200': { description: OK }
+  /memory/write:
+    post:
+      operationId: writeMemory
+      responses:
+        '200': { description: OK }
+  /memory/list:
+    get:
+      operationId: listMemory
+      responses:
+        '200': { description: OK }
+  /memory/{id}:
+    delete:
+      operationId: deleteMemory
+      responses:
+        '200': { description: OK }
+  /ready:
+    get:
+      operationId: ready
+      responses:
+        200: { description: Ready }

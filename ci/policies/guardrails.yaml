@@ -1,0 +1,7 @@
+rules:
+  - id: no-unsafe-file-write
+    description: "Only allow writes to configured file roots."
+    default: deny
+  - id: policy-before-tool
+    description: "Tool invocations must be preceded by policy checks."
+    default: require

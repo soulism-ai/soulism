@@ -1,0 +1,8 @@
+{
+  "expo": {
+    "name": "Cognitive AI Expo Adapter",
+    "slug": "soulism-expo-adapter",
+    "scheme": "soulism-expo",
+    "version": "1.0.0"
+  }
+}

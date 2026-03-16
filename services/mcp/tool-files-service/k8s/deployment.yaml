@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tool-files-service
+  labels:
+    app: tool-files-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tool-files-service
+  template:
+    metadata:
+      labels:
+        app: tool-files-service
+    spec:
+      containers:
+        - name: tool-files-service
+          image: ghcr.io/soulism/tool-files-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3003
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: tool-files-service
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

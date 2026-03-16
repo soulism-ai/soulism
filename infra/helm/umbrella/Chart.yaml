@@ -1,0 +1,6 @@
+apiVersion: v2
+name: soulism-platform
+description: Umbrella chart for the Cognitive AI platform.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "providers": {
+    "pagerduty": {
+      "enabled": true,
+      "endpoint": "https://events.pagerduty.com/v2/enqueue",
+      "authType": "key",
+      "keyRef": "PAGERDUTY_ROUTING_KEY"
+    },
+    "slack": {
+      "enabled": true,
+      "endpoint": "https://hooks.slack.com/services/T000/B000/XXXX",
+      "authType": "bearer",
+      "keyRef": "SLACK_BOT_TOKEN"
+    }
+  },
+  "retryPolicy": {
+    "maxAttempts": 3,
+    "backoffMs": 200
+  }
+}
+

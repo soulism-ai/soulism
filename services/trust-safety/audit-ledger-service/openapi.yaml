@@ -1,0 +1,29 @@
+openapi: 3.1.0
+info:
+  title: audit-ledger-service
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        '200': { description: OK }
+  /audit/events:
+    post:
+      operationId: appendEvent
+      responses:
+        '200': { description: OK }
+    get:
+      operationId: queryEvents
+      responses:
+        '200': { description: OK }
+  /audit/hash-chain/verify:
+    get:
+      operationId: verifyHashChain
+      responses:
+        '200': { description: OK }
+  /ready:
+    get:
+      operationId: ready
+      responses:
+        200: { description: Ready }

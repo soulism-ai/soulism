@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: soulism
+  labels:
+    app.kubernetes.io/part-of: soulism-platform
+    pod-security.kubernetes.io/enforce: baseline
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: soulism-edge
+  labels:
+    app.kubernetes.io/part-of: soulism-platform
+    pod-security.kubernetes.io/enforce: baseline
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: soulism-data
+  labels:
+    app.kubernetes.io/part-of: soulism-platform
+    pod-security.kubernetes.io/enforce: baseline

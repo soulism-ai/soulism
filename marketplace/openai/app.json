@@ -1,0 +1,34 @@
+{
+  "name": "Cognitive AI Policy Runtime",
+  "description": "Policy-gated persona runtime with auditable tool execution for enterprise assistants.",
+  "publisher": "AOTUMN Cognitive",
+  "endpoints": {
+    "api": "https://api.soulism.local/v1",
+    "oauth": "https://auth.soulism.local/oauth"
+  },
+  "assets": {
+    "icon": "assets/icon.png",
+    "banner": "assets/banner.png",
+    "screenshots": [
+      "assets/screenshots/01.png",
+      "assets/screenshots/02.png",
+      "assets/screenshots/03.png"
+    ]
+  },
+  "capabilities": [
+    "persona.registry",
+    "memory.read_write",
+    "tool.webfetch",
+    "tool.files"
+  ],
+  "compatibility": {
+    "runtime": "node20",
+    "schemaVersion": "1.0.0"
+  },
+  "provenance": {
+    "publisher": "AOTUMN Cognitive",
+    "digest": "sha256:497f7af7e7849c99f26e0cda1f70bbcd8fcf6b9f00fd983b99196f2f652236e8",
+    "signature": "sig-openai-app-v1",
+    "createdAt": "2026-02-28T00:00:00Z"
+  }
+}

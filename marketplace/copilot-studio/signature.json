@@ -1,0 +1,19 @@
+{
+  "channel": "copilot-studio",
+  "descriptor": "marketplace/copilot-studio/manifest.yaml",
+  "signingMode": "kms",
+  "keyId": "marketplace-key-1",
+  "keySource": "aws:kms",
+  "publisher": "soulism-labs",
+  "digest": "sha256:11a80f9db4d994e11566e26eedb1f768fc5f5cb218e1b10c86a427f173827600",
+  "signature": "MEQCIBm8YK9mIAT4Wcz0aFgSWaNma+1goChySSfrrwJJZhcJAiA9+kxJhk7k1sqvWa3c8Yv0kb/aStUuPDBIE1tGGJwPig==",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhTxNkIyDwyT6HOI4876r5PSTkxgJ\nzp0sLe7FK60VXiVN+yr1sqAadwLX1rQhcfZeQqMakm5AWwaPiVhQn9OgHg==\n-----END PUBLIC KEY-----\n",
+  "createdAt": "2026-03-11T14:09:51.601Z",
+  "compatibility": {
+    "minCliVersion": "0.1.0",
+    "runtimes": [
+      "copilot-studio-http",
+      "copilot-m365-plugin"
+    ]
+  }
+}

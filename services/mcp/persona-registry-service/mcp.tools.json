@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "soulism-persona-registry-tools",
+  "tools": [
+    {
+      "name": "persona.list",
+      "description": "List loaded persona packs",
+      "inputSchema": {},
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "persona.get",
+      "description": "Fetch raw persona by id",
+      "inputSchema": {
+        "type": "object"
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "persona.effective",
+      "description": "Fetch effective resolved persona by id",
+      "inputSchema": {
+        "type": "object"
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0.0",
+  "maxHallucinationFailureRate": 0.03,
+  "maxHallucinationIncreaseDelta": 0.01,
+  "minPassRate": 1,
+  "maxPassRateDropDelta": 0.02,
+  "requireSigningEnforcementPass": true,
+  "requireAdapterE2EParityPass": true,
+  "requireAdapterRuntimeParityPass": true,
+  "requireAdapterFrameworkParityPass": true,
+  "requireAdapterFrameworkBootParityPass": true,
+  "requireAdapterFrameworkCliBootParityPass": true
+}

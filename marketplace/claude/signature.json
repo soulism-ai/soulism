@@ -1,0 +1,19 @@
+{
+  "channel": "claude",
+  "descriptor": "marketplace/claude/marketplace.json",
+  "signingMode": "kms",
+  "keyId": "marketplace-key-1",
+  "keySource": "aws:kms",
+  "publisher": "soulism-labs",
+  "digest": "sha256:81caad195e3ac15b468c5e9e15e1406cba66b40245a7b86cc669c72188418acb",
+  "signature": "MEQCIAPSh+sqBJ5Aup2m1zNgBDDMlCPfdHSc1bewXJTHCgR2AiBZl/kX8D78cLkgzwIjCFt1vY1GEv/mdBBwrq5H3832rQ==",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhTxNkIyDwyT6HOI4876r5PSTkxgJ\nzp0sLe7FK60VXiVN+yr1sqAadwLX1rQhcfZeQqMakm5AWwaPiVhQn9OgHg==\n-----END PUBLIC KEY-----\n",
+  "createdAt": "2026-03-11T14:09:51.601Z",
+  "compatibility": {
+    "minCliVersion": "0.1.0",
+    "runtimes": [
+      "claude-desktop-mcp",
+      "claude-marketplace-http"
+    ]
+  }
+}

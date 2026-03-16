@@ -1,0 +1,23 @@
+{
+  "id": "compliance/vendor-management",
+  "title": "Vendor Management Notes (Engineering)",
+  "description": "If you integrate external vendors (LLMs, vector DBs, telemetry), document:",
+  "source": "@site/../../docs/compliance/vendor-management.md",
+  "sourceDirName": "compliance",
+  "slug": "/compliance/vendor-management",
+  "permalink": "/docs/compliance/vendor-management",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Risk Register (Initial)",
+    "permalink": "/docs/compliance/risk-register"
+  },
+  "next": {
+    "title": "Documentation",
+    "permalink": "/docs/"
+  }
+}

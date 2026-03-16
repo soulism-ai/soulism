@@ -1,0 +1,39 @@
+{
+  "$id": "https://cognitive.ai/schema/marketplace.openai.schema.json",
+  "title": "OpenAIAppDescriptor",
+  "type": "object",
+  "required": ["name", "description", "publisher", "endpoints"],
+  "properties": {
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "publisher": { "type": "string" },
+    "version": { "type": "string" },
+    "endpoints": {
+      "type": "object",
+      "required": ["api", "oauth"],
+      "properties": {
+        "api": { "type": "string" },
+        "oauth": { "type": "string" }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "properties": {
+        "icon": { "type": "string" },
+        "banner": { "type": "string" },
+        "screenshots": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "runtime": { "type": "string" },
+        "schemaVersion": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": true
+}

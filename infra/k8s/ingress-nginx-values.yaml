@@ -1,0 +1,13 @@
+controller:
+  replicaCount: 2
+  allowSnippetAnnotations: false
+  metrics:
+    enabled: true
+  config:
+    use-forwarded-headers: "true"
+    enable-real-ip: "true"
+    proxy-body-size: "2m"
+    server-tokens: "false"
+    ssl-redirect: "true"
+defaultBackend:
+  enabled: true

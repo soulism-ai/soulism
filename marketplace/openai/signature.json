@@ -1,0 +1,19 @@
+{
+  "channel": "openai",
+  "descriptor": "marketplace/openai/app.json",
+  "signingMode": "kms",
+  "keyId": "marketplace-key-1",
+  "keySource": "aws:kms",
+  "publisher": "soulism-labs",
+  "digest": "sha256:4806139b3fb5d83c14c85b94f28f27cb527972d09df2dc615389a4dbf79babb4",
+  "signature": "MEYCIQCA5411vxiaG67P2PJyFykzVi9AmMm7fRjY37LGXOXKCAIhALgwTyOp/q3xdscf/snHZSGSajrBKJFUJ2enyXd00HUY",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhTxNkIyDwyT6HOI4876r5PSTkxgJ\nzp0sLe7FK60VXiVN+yr1sqAadwLX1rQhcfZeQqMakm5AWwaPiVhQn9OgHg==\n-----END PUBLIC KEY-----\n",
+  "createdAt": "2026-03-11T14:09:51.601Z",
+  "compatibility": {
+    "minCliVersion": "0.1.0",
+    "runtimes": [
+      "chatgpt-apps",
+      "openai-app-runtime-http"
+    ]
+  }
+}

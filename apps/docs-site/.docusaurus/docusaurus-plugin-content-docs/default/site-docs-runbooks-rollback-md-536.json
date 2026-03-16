@@ -1,0 +1,23 @@
+{
+  "id": "runbooks/rollback",
+  "title": "Rollback Runbook",
+  "description": "Rollback is acceptable and encouraged when:",
+  "source": "@site/../../docs/runbooks/rollback.md",
+  "sourceDirName": "runbooks",
+  "slug": "/runbooks/rollback",
+  "permalink": "/docs/runbooks/rollback",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Open-source Quick Start",
+    "permalink": "/docs/runbooks/open-source-quickstart"
+  },
+  "next": {
+    "title": "SLA / SLO (Starter)",
+    "permalink": "/docs/runbooks/sla-slo"
+  }
+}
