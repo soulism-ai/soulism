@@ -243,7 +243,7 @@ export default function SoulsHub() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredSouls.map((soul, idx) => (
-              <div key={idx} className="flex flex-col bg-[#121212] border border-white/5 hover:border-white/20 rounded-xl p-4 transition-colors group cursor-pointer relative overflow-hidden">
+              <Link href={`/souls/${soul.slug}`} key={idx} className="flex flex-col bg-[#121212] border border-white/5 hover:border-white/20 rounded-xl p-4 transition-colors group cursor-pointer relative overflow-hidden">
                 
                 {/* Top Row: Avatar Context */}
                 <div className="flex items-start gap-3 mb-3">
@@ -295,7 +295,7 @@ export default function SoulsHub() {
                   </span>
                 </div>
 
-              </div>
+              </Link>
             ))}
           </div>
         )}
