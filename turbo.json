@@ -2,6 +2,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": ["NEXTAUTH_URL", "DB"],
       "outputs": ["dist/**", "build/**", ".next/**", ".open-next/**"]
     },
     "typecheck": {
