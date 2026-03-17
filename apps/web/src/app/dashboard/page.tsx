@@ -34,7 +34,25 @@ export default function Dashboard() {
     }
   }, [status, isCheckingWeb3, web3Account, router]);
 
-  const [activeTab, setActiveTab] = useState("Souls");
+  const [activeTab, setActiveTab] = useState("Bought Souls");
+  const [dashboardData, setDashboardData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (status !== "unauthenticated" || web3Account) {
+        try {
+          const res = await fetch(`/api/dashboard?web3Account=${web3Account || ""}`);
+          if (res.ok) {
+            const data = await res.json();
+            setDashboardData(data);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    fetchDashboardData();
+  }, [status, web3Account]);
 
   if (status === "loading" || isCheckingWeb3) {
     return <div className="min-h-screen flex items-center justify-center text-zinc-500">Loading...</div>;
@@ -114,11 +132,11 @@ export default function Dashboard() {
             <div className="flex flex-col sm:flex-row gap-4 mb-4">
               <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6">
                 <span className="text-zinc-500 text-sm font-medium tracking-wide">Total Portfolio Value</span>
-                <div className="text-4xl font-bold font-mono text-white mt-2">1.450 <span className="text-xl text-zinc-500">ETH</span></div>
+                <div className="text-4xl font-bold font-mono text-white mt-2">{dashboardData?.portfolioValue || "0.000"} <span className="text-xl text-zinc-500">ETH</span></div>
               </div>
               <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6">
                 <span className="text-zinc-500 text-sm font-medium tracking-wide">Realized PnL</span>
-                <div className="text-4xl font-bold font-mono text-emerald-400 mt-2">+0.231 <span className="text-xl text-zinc-500">ETH</span></div>
+                <div className="text-4xl font-bold font-mono text-emerald-400 mt-2">{Number(dashboardData?.realizedPnl || 0) >= 0 ? "+" : ""}{dashboardData?.realizedPnl || "0.000"} <span className="text-xl text-zinc-500">ETH</span></div>
               </div>
             </div>
 
@@ -127,45 +145,30 @@ export default function Dashboard() {
                 <thead className="bg-white/5 border-b border-white/10 text-xs text-zinc-500 font-mono uppercase tracking-widest">
                   <tr>
                     <th className="px-6 py-4">Token / Soul</th>
-                    <th className="px-6 py-4">Balance</th>
-                    <th className="px-6 py-4 hidden sm:table-cell">Value (ETH)</th>
+                    <th className="px-6 py-4">Amount</th>
+                    <th className="px-6 py-4 hidden sm:table-cell">Price (ETH)</th>
                     <th className="px-6 py-4 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  <tr className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-soul-purple flex items-center justify-center text-xs">TR</div>
-                      Trello Core
-                    </td>
-                    <td className="px-6 py-4 font-mono text-zinc-300">14.0000</td>
-                    <td className="px-6 py-4 font-mono text-zinc-400 hidden sm:table-cell">0.825</td>
-                    <td className="px-6 py-4 text-right">
-                      <Link href="/souls/trello-core" className="text-xs px-3 py-1.5 bg-soul-purple hover:bg-pink-600 font-bold rounded text-white transition-colors">Trade</Link>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#EA4C89] flex items-center justify-center text-xs">DB</div>
-                      Dribbble Reviewer
-                    </td>
-                    <td className="px-6 py-4 font-mono text-zinc-300">5.5000</td>
-                    <td className="px-6 py-4 font-mono text-zinc-400 hidden sm:table-cell">0.402</td>
-                    <td className="px-6 py-4 text-right">
-                      <Link href="/souls/dribbble-reviewer" className="text-xs px-3 py-1.5 bg-soul-purple hover:bg-pink-600 font-bold rounded text-white transition-colors">Trade</Link>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#1da1f2] flex items-center justify-center text-xs">TW</div>
-                      Twitter Reply Bot
-                    </td>
-                    <td className="px-6 py-4 font-mono text-zinc-300">22.1000</td>
-                    <td className="px-6 py-4 font-mono text-zinc-400 hidden sm:table-cell">0.223</td>
-                    <td className="px-6 py-4 text-right">
-                      <Link href="/souls/twitter-reply-bot" className="text-xs px-3 py-1.5 bg-soul-purple hover:bg-pink-600 font-bold rounded text-white transition-colors">Trade</Link>
-                    </td>
-                  </tr>
+                  {(dashboardData?.boughtSouls || []).map((trade: any, i: number) => (
+                    <tr key={i} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 font-bold text-white flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-soul-purple flex items-center justify-center text-xs">{trade.slug || "UNKN"}</div>
+                        {trade.soul_name}
+                      </td>
+                      <td className="px-6 py-4 font-mono text-zinc-300">{Number(trade.amount).toFixed(4)}</td>
+                      <td className="px-6 py-4 font-mono text-zinc-400 hidden sm:table-cell">{Number(trade.price_eth).toFixed(3)}</td>
+                      <td className="px-6 py-4 text-right">
+                        <Link href={`/souls/${trade.slug?.toLowerCase()}`} className="text-xs px-3 py-1.5 bg-soul-purple hover:bg-pink-600 font-bold rounded text-white transition-colors">Trade</Link>
+                      </td>
+                    </tr>
+                  ))}
+                  {!(dashboardData?.boughtSouls?.length) && (
+                    <tr>
+                      <td colSpan={4} className="px-6 py-8 text-center text-zinc-500">No souls bought yet.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -261,37 +264,39 @@ export default function Dashboard() {
               <div className="flex-1 bg-gradient-to-br from-emerald-900/30 to-[#121212] border border-emerald-500/20 rounded-2xl p-6 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-10"><svg className="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z" /></svg></div>
                 <span className="text-emerald-400/80 text-sm font-medium tracking-wide">Total Protocol Revenue</span>
-                <div className="text-4xl font-bold font-mono text-emerald-400 mt-2">12.04 <span className="text-lg text-emerald-500/60">ETH</span></div>
+                <div className="text-4xl font-bold font-mono text-emerald-400 mt-2">{dashboardData?.totalRevenue || "0.000"} <span className="text-lg text-emerald-500/60">ETH</span></div>
                 <p className="text-xs text-zinc-500 mt-2">Earned from trading fees on Created Souls.</p>
               </div>
               <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6">
                 <span className="text-zinc-500 text-sm font-medium tracking-wide">Pending Claim</span>
-                <div className="text-3xl font-bold font-mono text-white mt-2">0.45 <span className="text-lg text-zinc-500">ETH</span></div>
+                <div className="text-3xl font-bold font-mono text-white mt-2">0.000 <span className="text-lg text-zinc-500">ETH</span></div>
                 <button className="mt-4 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded text-sm transition-colors w-full">Claim Rewards</button>
               </div>
             </div>
 
-            <h2 className="text-lg font-bold font-display px-2 mt-4">Revenue Breakdown</h2>
+            <h2 className="text-lg font-bold font-display px-2 mt-4">Revenue Breakdown (Recent Trades)</h2>
             <div className="w-full bg-[#121212] border border-white/10 rounded-2xl overflow-hidden">
               <table className="w-full text-left text-sm">
                 <thead className="bg-white/5 border-b border-white/10 text-xs text-zinc-500 font-mono uppercase tracking-widest">
                   <tr>
                     <th className="px-6 py-4">Soul</th>
-                    <th className="px-6 py-4">Trading Volume</th>
-                    <th className="px-6 py-4 text-right">Fees Earned</th>
+                    <th className="px-6 py-4">Trade Action</th>
+                    <th className="px-6 py-4 text-right">Fee Earned</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  <tr className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white">AutoSwapBot</td>
-                    <td className="px-6 py-4 font-mono text-zinc-400">240.0 ETH</td>
-                    <td className="px-6 py-4 font-mono text-emerald-400 text-right">8.50 ETH</td>
-                  </tr>
-                  <tr className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white">NeoHacker</td>
-                    <td className="px-6 py-4 font-mono text-zinc-400">120.5 ETH</td>
-                    <td className="px-6 py-4 font-mono text-emerald-400 text-right">3.54 ETH</td>
-                  </tr>
+                  {(dashboardData?.trades || []).slice(0, 5).map((trade: any, i: number) => (
+                    <tr key={i} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 font-bold text-white">{trade.soul_name}</td>
+                      <td className="px-6 py-4 font-mono text-zinc-400 uppercase">{trade.trade_type}</td>
+                      <td className="px-6 py-4 font-mono text-emerald-400 text-right">{Number(trade.fee_eth).toFixed(4)} ETH</td>
+                    </tr>
+                  ))}
+                  {!(dashboardData?.trades?.length) && (
+                    <tr>
+                      <td colSpan={3} className="px-6 py-8 text-center text-zinc-500">No trading activity yet.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
