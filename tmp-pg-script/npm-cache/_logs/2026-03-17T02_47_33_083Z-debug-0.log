@@ -1,0 +1,142 @@
+0 verbose cli /opt/homebrew/Cellar/node/25.6.1/bin/node /opt/homebrew/bin/npm
+1 info using npm@11.9.0
+2 info using node@v25.6.1
+3 silly config load:file:/opt/homebrew/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/apple/Developer/soulism/tmp-pg-script/.npmrc
+5 silly config load:file:/Users/Apple/.npmrc
+6 silly config load:file:/opt/homebrew/etc/npmrc
+7 verbose title npm install pg
+8 verbose argv "install" "pg" "--cache" "/Users/apple/Developer/soulism/tmp-pg-script/npm-cache"
+9 verbose logfile logs-max:10 dir:/Users/apple/Developer/soulism/tmp-pg-script/npm-cache/_logs/2026-03-17T02_47_33_083Z-
+10 verbose logfile /Users/apple/Developer/soulism/tmp-pg-script/npm-cache/_logs/2026-03-17T02_47_33_083Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest pg@*
+15 silly packumentCache full:https://registry.npmjs.org/pg cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/pg 186ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/pg set size:undefined disposed:false
+18 silly fetch manifest pg-native@>=3.0.1
+19 silly packumentCache full:https://registry.npmjs.org/pg-native cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/npm 209ms
+21 http fetch GET 200 https://registry.npmjs.org/pg-native 56ms (cache miss)
+22 silly packumentCache full:https://registry.npmjs.org/pg-native set size:undefined disposed:false
+23 silly placeDep ROOT pg@8.20.0 OK for: tmp-pg-script@1.0.0 want: *
+24 silly fetch manifest pg-connection-string@^2.12.0
+25 silly packumentCache full:https://registry.npmjs.org/pg-connection-string cache-miss
+26 silly fetch manifest pg-pool@^3.13.0
+27 silly packumentCache full:https://registry.npmjs.org/pg-pool cache-miss
+28 silly fetch manifest pg-protocol@^1.13.0
+29 silly packumentCache full:https://registry.npmjs.org/pg-protocol cache-miss
+30 silly fetch manifest pg-types@2.2.0
+31 silly packumentCache full:https://registry.npmjs.org/pg-types cache-miss
+32 silly fetch manifest pgpass@1.0.5
+33 silly packumentCache full:https://registry.npmjs.org/pgpass cache-miss
+34 silly fetch manifest pg-cloudflare@^1.3.0
+35 silly packumentCache full:https://registry.npmjs.org/pg-cloudflare cache-miss
+36 http fetch GET 200 https://registry.npmjs.org/pg-pool 40ms (cache miss)
+37 silly packumentCache full:https://registry.npmjs.org/pg-pool set size:undefined disposed:false
+38 http fetch GET 200 https://registry.npmjs.org/pg-connection-string 46ms (cache miss)
+39 silly packumentCache full:https://registry.npmjs.org/pg-connection-string set size:undefined disposed:false
+40 http fetch GET 200 https://registry.npmjs.org/pgpass 134ms (cache miss)
+41 silly packumentCache full:https://registry.npmjs.org/pgpass set size:undefined disposed:false
+42 http fetch GET 200 https://registry.npmjs.org/pg-protocol 138ms (cache miss)
+43 silly packumentCache full:https://registry.npmjs.org/pg-protocol set size:undefined disposed:false
+44 http fetch GET 200 https://registry.npmjs.org/pg-types 139ms (cache miss)
+45 silly packumentCache full:https://registry.npmjs.org/pg-types set size:undefined disposed:false
+46 http fetch GET 200 https://registry.npmjs.org/pg-cloudflare 152ms (cache miss)
+47 silly packumentCache full:https://registry.npmjs.org/pg-cloudflare set size:undefined disposed:false
+48 silly fetch manifest pg@>=8.0
+49 silly packumentCache full:https://registry.npmjs.org/pg cache-miss
+50 http cache https://registry.npmjs.org/pg 4ms (cache hit)
+51 silly packumentCache full:https://registry.npmjs.org/pg set size:475297 disposed:false
+52 silly placeDep ROOT pg-cloudflare@1.3.0 OK for: pg@8.20.0 want: ^1.3.0
+53 silly placeDep ROOT pg-connection-string@2.12.0 OK for: pg@8.20.0 want: ^2.12.0
+54 silly placeDep ROOT pg-pool@3.13.0 OK for: pg@8.20.0 want: ^3.13.0
+55 silly placeDep ROOT pg-protocol@1.13.0 OK for: pg@8.20.0 want: ^1.13.0
+56 silly placeDep ROOT pg-types@2.2.0 OK for: pg@8.20.0 want: 2.2.0
+57 silly placeDep ROOT pgpass@1.0.5 OK for: pg@8.20.0 want: 1.0.5
+58 silly fetch manifest pg-int8@1.0.1
+59 silly packumentCache full:https://registry.npmjs.org/pg-int8 cache-miss
+60 silly fetch manifest postgres-date@~1.0.4
+61 silly packumentCache full:https://registry.npmjs.org/postgres-date cache-miss
+62 silly fetch manifest postgres-array@~2.0.0
+63 silly packumentCache full:https://registry.npmjs.org/postgres-array cache-miss
+64 silly fetch manifest postgres-bytea@~1.0.0
+65 silly packumentCache full:https://registry.npmjs.org/postgres-bytea cache-miss
+66 silly fetch manifest postgres-interval@^1.1.0
+67 silly packumentCache full:https://registry.npmjs.org/postgres-interval cache-miss
+68 silly fetch manifest split2@^4.1.0
+69 silly packumentCache full:https://registry.npmjs.org/split2 cache-miss
+70 http fetch GET 200 https://registry.npmjs.org/pg-int8 35ms (cache miss)
+71 silly packumentCache full:https://registry.npmjs.org/pg-int8 set size:undefined disposed:false
+72 http fetch GET 200 https://registry.npmjs.org/postgres-bytea 46ms (cache miss)
+73 silly packumentCache full:https://registry.npmjs.org/postgres-bytea set size:undefined disposed:false
+74 http fetch GET 200 https://registry.npmjs.org/postgres-date 54ms (cache miss)
+75 silly packumentCache full:https://registry.npmjs.org/postgres-date set size:undefined disposed:false
+76 http fetch GET 200 https://registry.npmjs.org/postgres-array 54ms (cache miss)
+77 silly packumentCache full:https://registry.npmjs.org/postgres-array set size:undefined disposed:false
+78 http fetch GET 200 https://registry.npmjs.org/split2 54ms (cache miss)
+79 silly packumentCache full:https://registry.npmjs.org/split2 set size:undefined disposed:false
+80 http fetch GET 200 https://registry.npmjs.org/postgres-interval 55ms (cache miss)
+81 silly packumentCache full:https://registry.npmjs.org/postgres-interval set size:undefined disposed:false
+82 silly placeDep ROOT pg-int8@1.0.1 OK for: pg-types@2.2.0 want: 1.0.1
+83 silly placeDep ROOT postgres-array@2.0.0 OK for: pg-types@2.2.0 want: ~2.0.0
+84 silly placeDep ROOT postgres-bytea@1.0.1 OK for: pg-types@2.2.0 want: ~1.0.0
+85 silly placeDep ROOT postgres-date@1.0.7 OK for: pg-types@2.2.0 want: ~1.0.4
+86 silly placeDep ROOT postgres-interval@1.2.0 OK for: pg-types@2.2.0 want: ^1.1.0
+87 silly fetch manifest xtend@^4.0.0
+88 silly packumentCache full:https://registry.npmjs.org/xtend cache-miss
+89 http fetch GET 200 https://registry.npmjs.org/xtend 32ms (cache miss)
+90 silly packumentCache full:https://registry.npmjs.org/xtend set size:undefined disposed:false
+91 silly placeDep ROOT split2@4.2.0 OK for: pgpass@1.0.5 want: ^4.1.0
+92 silly placeDep ROOT xtend@4.0.2 OK for: postgres-interval@1.2.0 want: ^4.0.0
+93 silly reify moves {}
+94 verbose stack Error: EPERM: operation not permitted, mkdir '/Users/apple/Developer/soulism/tmp-pg-script/node_modules/pg'
+94 verbose stack     at async mkdir (node:internal/fs/promises:856:10)
+94 verbose stack     at async /opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:572:20
+94 verbose stack     at async Promise.allSettled (index 0)
+94 verbose stack     at async #reifyPackages (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:309:11)
+94 verbose stack     at async Arborist.reify (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:121:5)
+94 verbose stack     at async Install.exec (/opt/homebrew/lib/node_modules/npm/lib/commands/install.js:151:5)
+94 verbose stack     at async Npm.exec (/opt/homebrew/lib/node_modules/npm/lib/npm.js:208:9)
+94 verbose stack     at async module.exports (/opt/homebrew/lib/node_modules/npm/lib/cli/entry.js:67:5)
+95 error code EPERM
+96 error syscall mkdir
+97 error path /Users/apple/Developer/soulism/tmp-pg-script/node_modules/pg
+98 error errno -1
+99 error Error: EPERM: operation not permitted, mkdir '/Users/apple/Developer/soulism/tmp-pg-script/node_modules/pg'
+99 error     at async mkdir (node:internal/fs/promises:856:10)
+99 error     at async /opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:572:20
+99 error     at async Promise.allSettled (index 0)
+99 error     at async #reifyPackages (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:309:11)
+99 error     at async Arborist.reify (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:121:5)
+99 error     at async Install.exec (/opt/homebrew/lib/node_modules/npm/lib/commands/install.js:151:5)
+99 error     at async Npm.exec (/opt/homebrew/lib/node_modules/npm/lib/npm.js:208:9)
+99 error     at async module.exports (/opt/homebrew/lib/node_modules/npm/lib/cli/entry.js:67:5) {
+99 error   errno: -1,
+99 error   code: 'EPERM',
+99 error   syscall: 'mkdir',
+99 error   path: '/Users/apple/Developer/soulism/tmp-pg-script/node_modules/pg'
+99 error }
+100 error
+100 error The operation was rejected by your operating system.
+100 error It is likely you do not have the permissions to access this file as the current user
+100 error
+100 error If you believe this might be a permissions issue, please double-check the
+100 error permissions of the file and its containing directories, or try running
+100 error the command again as root/Administrator.
+101 silly unfinished npm timer reify 1773715653181
+102 silly unfinished npm timer reify:createSparse 1773715653691
+103 verbose cwd /Users/apple/Developer/soulism/tmp-pg-script
+104 verbose os Darwin 25.3.0
+105 verbose node v25.6.1
+106 verbose npm  v11.9.0
+107 notice
+107 notice New [33mminor[39m version of npm available! [33m11.9.0[39m -> [34m11.11.1[39m
+107 notice Changelog: [34mhttps://github.com/npm/cli/releases/tag/v11.11.1[39m
+107 notice To update run: [4mnpm install -g npm@11.11.1[24m
+107 notice  { force: true, Symbol(proc-log.meta): true }
+108 verbose exit -1
+109 verbose code -1
+110 error A complete log of this run can be found in: /Users/apple/Developer/soulism/tmp-pg-script/npm-cache/_logs/2026-03-17T02_47_33_083Z-debug-0.log
