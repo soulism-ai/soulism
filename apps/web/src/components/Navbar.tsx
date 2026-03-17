@@ -67,7 +67,7 @@ export function Navbar() {
       <div className="flex items-center gap-12 pointer-events-auto">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative w-8 h-8 rounded-md flex items-center justify-center shadow-[0_0_12px_var(--tw-colors-soul-glow)] transition-all group-hover:shadow-[0_0_20px_var(--tw-colors-soul-glow)] overflow-hidden">
-            <Image src="/logo.png" alt="Soulism Logo" fill className="object-cover" />
+            <Image src="/logo.png" alt="Soulism Logo" fill className="object-cover animate-[spin_10s_linear_infinite]" />
           </div>
           <span className="font-display font-bold text-xl tracking-tight text-white drop-shadow-md">Soulism</span>
         </Link>
@@ -81,32 +81,6 @@ export function Navbar() {
           >
             Support
           </button>
-
-          {/* Interactive Search Component */}
-          <div className="relative flex items-center">
-            <div className="flex items-center bg-transparent border-b border-white/20 focus-within:border-white/50 transition-all duration-300 w-64">
-              <input
-                type="text"
-                placeholder="search for souls..."
-                className="w-full bg-transparent border-none text-white px-3 py-1.5 focus:outline-none placeholder:text-zinc-600 text-sm"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && searchQuery.trim().length > 0) {
-                    window.location.href = `/souls?q=${encodeURIComponent(searchQuery.trim())}`;
-                  }
-                }}
-              />
-              {searchQuery.length > 0 && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="pr-2 text-zinc-500 hover:text-white transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-              )}
-            </div>
-          </div>
         </div>
       </div>
 

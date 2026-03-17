@@ -21,7 +21,7 @@ export default function Home() {
         </div>
 
         <h1 className="font-display text-5xl sm:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-500">
-          Cognitive AI,<br />Governed in Code.
+         Soulism AI,<br />Governed in Code.
         </h1>
 
         <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mb-10 leading-relaxed">
