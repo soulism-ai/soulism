@@ -1,5 +1,10 @@
 {
   "framework": "nextjs",
   "buildCommand": "pnpm run build",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "build": {
+    "env": {
+      "NODE_VERSION": "20"
+    }
+  }
 }
