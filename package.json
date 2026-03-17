@@ -7,6 +7,7 @@
     "node": "20.x"
   },
   "scripts": {
+    "preinstall": "npx --yes pnpm@9.15.5 install",
     "build:all": "turbo run build",
     "test": "pnpm run test:unit && pnpm run test:integration",
     "test:unit": "pnpm exec vitest run --project unit",
