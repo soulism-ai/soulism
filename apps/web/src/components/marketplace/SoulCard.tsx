@@ -1,11 +1,17 @@
 import { ethers } from "ethers";
 import Link from "next/link";
 
-interface TokenCardProps {
+interface SoulCardProps {
   token: any;
 }
 
-export function TokenCard({ token }: TokenCardProps) {
+export function SoulCard({ token }: SoulCardProps) {
+  // MOCK: Generate a consistent random-looking price based on the token address
+  // In a real marketplace, this would be `token.price`
+  const mockPrice = token.address ? 
+    (0.01 + ((parseInt(token.address.slice(-4), 16) % 100) / 1000)).toFixed(3) : 
+    "0.05";
+
   return (
     <Link href={`/souls/${token.token}`} className="flex flex-col bg-[#121212] border border-white/5 hover:border-white/20 rounded-xl p-4 transition-colors group cursor-pointer relative overflow-hidden text-left h-full w-full">
       <div className="flex items-start gap-3 mb-3 w-full">
@@ -23,20 +29,14 @@ export function TokenCard({ token }: TokenCardProps) {
       </div>
 
       <div className="flex flex-col gap-1 mb-3 pt-3 border-t border-white/5 w-full">
-        <div className="flex justify-between items-center text-[10px]">
-          <span className="text-zinc-500 font-mono">SOUL VALUE (MCAP)</span>
-          <span className="text-emerald-400 font-mono font-bold">{Number(ethers.formatUnits(token.raised, 18)).toFixed(4)} ETH</span>
-        </div>
-        <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden mt-1">
-          <div 
-            className="h-full bg-gradient-to-r from-emerald-500 to-green-400 rounded-full" 
-            style={{ width: `${Math.min((Number(ethers.formatUnits(token.raised, 18)) / 10) * 100, 100)}%` }} // Arbitrary visual scaling for demo
-          ></div>
+        <div className="flex justify-between items-center text-sm">
+          <span className="text-zinc-400 font-bold">List Price</span>
+          <span className="text-pink-400 font-mono font-bold">{mockPrice} ETH</span>
         </div>
       </div>
       
-      <div className="mt-auto pt-3 flex items-center justify-between text-xs w-full text-zinc-500 font-mono">
-        <span>View Details & Trade</span>
+      <div className="mt-auto flex items-center justify-between text-xs w-full text-zinc-500 font-mono">
+        <span>View Details & Buy</span>
         <span className="text-soul-purple group-hover:text-white transition-colors">→</span >
       </div>
     </Link>

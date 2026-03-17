@@ -79,7 +79,8 @@ export default function SoulDetails({ params }: { params: { id: string } }) {
   const [limit, setLimit] = useState<bigint>(BigInt(0));
   const [isTrading, setIsTrading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [tradeType, setTradeType] = useState<"buy" | "sell">("buy");
+  const [ownsSoul, setOwnsSoul] = useState(false);
+  const [apiKey, setApiKey] = useState<string | null>(null);
 
   // Follow states
   const [followersCount, setFollowersCount] = useState(0);
@@ -189,41 +190,34 @@ export default function SoulDetails({ params }: { params: { id: string } }) {
     setIsFollowLoading(false);
   }
 
-  async function handleTrade(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handlePurchase() {
     if (!factory || !provider || !tokenInfo) return;
 
     setIsTrading(true);
     try {
-      const formData = new FormData(e.currentTarget);
-      const amountStr = formData.get("amount") as string;
-      const amount = BigInt(amountStr);
       const signer = await provider.getSigner();
 
-      if (tradeType === "buy") {
-        const totalCost = cost * amount;
-        const transaction = await (factory as any).connect(signer).buy(
-          tokenInfo.token,
-          ethers.parseUnits(amountStr, 18),
-          { value: totalCost }
-        );
-        await transaction.wait();
-        alert("Successfully purchased Soul Keys!");
-      } else {
-        // Sell logic
-        const transaction = await (factory as any).connect(signer).sell(
-          tokenInfo.token,
-          ethers.parseUnits(amountStr, 18)
-        );
-        await transaction.wait();
-        alert("Successfully sold Soul Keys!");
-      }
+      // MOCK MARKETPLACE BUY:
+      // In a real implementation this would call a marketplace contract.
+      // Here we simulate the purchase and generate the API key.
+      const transaction = await (factory as any).connect(signer).buy(
+        tokenInfo.token,
+        ethers.parseUnits("1", 18), // buying 1 access token
+        { value: cost } // At the mock fixed price
+      );
+      await transaction.wait();
+      
+      alert("Successfully purchased Soul Access!");
+      
+      // MOCK: Generate the API Key locally for the demo
+      const randomKey = "sk_live_" + Array.from({length: 32}, () => Math.floor(Math.random()*36).toString(36)).join('');
+      setApiKey(randomKey);
+      setOwnsSoul(true);
 
-      // Refresh Data
       loadTokenData();
     } catch (error) {
-      console.error("Trade failed", error);
-      alert("Trade failed or user rejected transaction.");
+      console.error("Purchase failed", error);
+      alert("Purchase failed or user rejected transaction.");
     } finally {
       setIsTrading(false);
     }
@@ -346,51 +340,48 @@ export default function SoulDetails({ params }: { params: { id: string } }) {
                   <div className="text-zinc-500 text-sm py-4 text-center">Contract <br />not found on this chain.</div>
                 ) : (
                   <div className="w-full flex flex-col gap-3">
-                    {/* Trade Tabs */}
-                    <div className="flex bg-[#121212] rounded-lg p-1 border border-white/10 mb-2">
-                      <button
-                        type="button"
-                        onClick={() => setTradeType("buy")}
-                        className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-colors ${tradeType === "buy" ? "bg-soul-purple text-white shadow" : "text-zinc-500 hover:text-white"}`}
-                      >
-                        Buy
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setTradeType("sell")}
-                        className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-colors ${tradeType === "sell" ? "bg-red-500 text-white shadow" : "text-zinc-500 hover:text-white"}`}
-                      >
-                        Sell
-                      </button>
-                    </div>
-
-                    <form onSubmit={handleTrade} className="w-full flex flex-col gap-3">
-                      <div className="w-full flex justify-between items-center text-xs mb-1">
-                        <span className="text-zinc-500">Current Key Rate</span>
-                        <span className="text-pink-400 font-mono font-bold">{costEth} ETH</span>
+                    {ownsSoul ? (
+                      <div className="w-full flex flex-col gap-4">
+                        <div className="bg-[#1c1c1c] p-4 rounded-xl border border-emerald-500/30">
+                          <h4 className="text-emerald-400 font-bold mb-2 flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            Access Granted
+                          </h4>
+                          <p className="text-xs text-zinc-400 mb-3 leading-relaxed">You have purchased access to this Soul. Use the API key below to configure your agent.</p>
+                          <div className="bg-black/50 p-3 rounded-lg flex items-center justify-between border border-white/10 group relative">
+                            <code className="text-pink-400 font-mono text-xs truncate mr-4">{apiKey}</code>
+                            <button 
+                              onClick={() => {
+                                navigator.clipboard.writeText(apiKey || "");
+                                showToast("API Key copied!", "success");
+                              }}
+                              className="text-zinc-500 hover:text-white transition-colors"
+                              title="Copy API Key"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="relative">
-                        <input
-                          type="number"
-                          name="amount"
-                          min={1}
-                          max={100}
-                          placeholder="1"
-                          className="w-full bg-[#1c1c1c] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-soul-purple transition-colors pr-16 text-center text-xl font-bold font-mono"
-                          required
-                          defaultValue={1}
-                        />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold text-[10px] tracking-widest uppercase">KEYS</span>
-                      </div>
+                    ) : (
+                      <div className="w-full flex flex-col gap-4">
+                        <div className="w-full flex justify-between items-center text-sm mb-2">
+                           <span className="text-zinc-400 font-bold">Access Price</span>
+                           <span className="text-pink-400 font-mono font-bold text-lg">{costEth} ETH</span>
+                        </div>
 
-                      <button
-                        type="submit"
-                        disabled={isTrading}
-                        className={`w-full py-3 mt-2 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(236,72,153,0.3)] hover:shadow-[0_0_25px_rgba(236,72,153,0.5)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${tradeType === "buy" ? "bg-gradient-to-r from-soul-purple to-pink-500 hover:from-pink-500 hover:to-orange-500" : "bg-gradient-to-r from-red-500 to-orange-500 hover:from-orange-500 hover:to-yellow-500"}`}
-                      >
-                        {isTrading ? "Trading..." : `${tradeType === "buy" ? "Buy" : "Sell"} Soul Key`}
-                      </button>
-                    </form>
+                        <button
+                          onClick={handlePurchase}
+                          disabled={isTrading}
+                          className="w-full py-4 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(167,139,250,0.3)] hover:shadow-[0_0_25px_rgba(167,139,250,0.5)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-soul-purple to-pink-500 hover:from-pink-500 hover:to-orange-500"
+                        >
+                          {isTrading ? "Processing..." : "Purchase Access"}
+                        </button>
+                        <p className="text-[10px] text-zinc-500 text-center leading-relaxed">
+                          Purchasing grants you a custom API key to configure and interact with this AI Agent permanently.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

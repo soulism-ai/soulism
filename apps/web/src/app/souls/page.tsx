@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { ethers } from "ethers";
 import DotGrid from "@/components/DotGrid";
 // Components
-import { ListToken } from "@/components/pump/ListToken";
+import { ListSoul } from "@/components/marketplace/ListSoul";
 
 // ABIs & Config
 import Factory from "@/utils/pump/abis/Factory.json";
@@ -354,11 +354,8 @@ function SoulsHubContent() {
                     </p>
                     <div className="flex flex-col gap-1.5 mt-auto pt-4 border-t border-white/5">
                       <div className="flex justify-between items-center text-xs font-mono">
-                        <span className="text-zinc-500">BONDING CURVE</span>
-                        <span className="text-white font-semibold">{usagePercent.toFixed(1)}%</span>
-                      </div>
-                      <div className="w-full h-1.5 bg-[#1c1c1c] rounded-full overflow-hidden border border-white/5">
-                        <div className="h-full bg-emerald-500 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style={{ width: `${usagePercent}%` }}></div>
+                        <span className="text-zinc-500">MARKETPLACE PRICE</span>
+                        <span className="text-pink-400 font-semibold">{mcapEth.toFixed(3)} ETH</span>
                       </div>
                     </div>
                   </div>
@@ -373,9 +370,8 @@ function SoulsHubContent() {
                 <thead className="bg-[#1c1c1c] border-b border-white/10 text-[10px] sm:text-xs text-zinc-500 font-mono uppercase tracking-widest">
                   <tr>
                     <th className="px-6 py-4 font-bold">Soul / Token</th>
-                    <th className="px-6 py-4 font-bold">Price (ETH)</th>
-                    <th className="px-6 py-4 font-bold text-emerald-400">MCAP</th>
-                    <th className="px-6 py-4 font-bold hidden md:table-cell">24H Vol</th>
+                    <th className="px-6 py-4 font-bold text-pink-400">Price (ETH)</th>
+                    <th className="px-6 py-4 font-bold hidden md:table-cell">Sales</th>
                     <th className="px-6 py-4 font-bold text-right">Action</th>
                   </tr>
                 </thead>
@@ -407,9 +403,8 @@ function SoulsHubContent() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 font-mono font-bold text-pink-400">0.052</td>
-                        <td className="px-6 py-4 font-mono font-bold text-emerald-400">${(mcapEth * 3000).toLocaleString('en-US', {maximumFractionDigits: 1})}</td>
-                        <td className="px-6 py-4 font-mono text-zinc-400 hidden md:table-cell">${(Math.random() * 500000).toLocaleString('en-US', {maximumFractionDigits: 0})}</td>
+                        <td className="px-6 py-4 font-mono font-bold text-pink-400">{mcapEth.toFixed(3)}</td>
+                        <td className="px-6 py-4 font-mono text-zinc-400 hidden md:table-cell">{Math.floor(Math.random() * 500)}</td>
                         <td className="px-6 py-4 text-right">
                           <Link href={`/souls/${soul.token}`} className="text-xs px-4 py-2 bg-white/10 hover:bg-soul-purple group-hover:text-white font-bold rounded text-zinc-300 transition-colors">Trade</Link>
                         </td>
@@ -431,9 +426,9 @@ function SoulsHubContent() {
         </section>
       )}
 
-      {/* Web3 Curve Listing Modal */}
+      {/* Web3 Marketplace Listing Modal */}
       {showCreate && factory && provider && (
-        <ListToken toggleCreate={() => setShowCreate(false)} fee={fee} provider={provider} factory={factory} />
+        <ListSoul toggleCreate={() => setShowCreate(false)} fee={fee} provider={provider} factory={factory} />
       )}
     </div>
   );
