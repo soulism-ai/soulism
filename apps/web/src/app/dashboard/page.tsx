@@ -100,8 +100,8 @@ export default function Dashboard() {
               </div>
 
               <div className="flex items-center gap-6 mt-2 text-sm">
-                <div className="flex flex-col"><span className="font-bold text-white text-lg">0</span><span className="text-zinc-500">Followers</span></div>
-                <div className="flex flex-col"><span className="font-bold text-white text-lg">0</span><span className="text-zinc-500">Following</span></div>
+                <div className="flex flex-col"><span className="font-bold text-white text-lg">{dashboardData?.followersCount || 0}</span><span className="text-zinc-500">Followers</span></div>
+                <div className="flex flex-col"><span className="font-bold text-white text-lg">{dashboardData?.followingCount || 0}</span><span className="text-zinc-500">Following</span></div>
                 <div className="flex flex-col"><span className="font-bold text-white text-lg">0</span><span className="text-zinc-500">Created souls</span></div>
               </div>
             </div>

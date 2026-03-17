@@ -81,6 +81,17 @@ export default function SoulDetails({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true);
   const [tradeType, setTradeType] = useState<"buy" | "sell">("buy");
 
+  // Follow states
+  const [followersCount, setFollowersCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [localToast, setLocalToast] = useState<{msg: string, type: 'error' | 'success'} | null>(null);
+
+  const showToast = (msg: string, type: 'error' | 'success') => {
+    setLocalToast({ msg, type });
+    setTimeout(() => setLocalToast(null), 3000);
+  };
+
   async function loadTokenData() {
     try {
       let rpcProvider: ethers.Provider;
@@ -130,9 +141,53 @@ export default function SoulDetails({ params }: { params: { id: string } }) {
     }
   }
 
+  async function loadFollowData(creatorAddress: string) {
+    try {
+      const web3Account = typeof window !== "undefined" ? localStorage.getItem("web3Account") || "" : "";
+      const res = await fetch(`/api/follow?targetUserId=${creatorAddress}&web3Account=${web3Account}`);
+      if (res.ok) {
+        const data = await res.json();
+        setFollowersCount(data.followersCount || 0);
+        setIsFollowing(data.isFollowing || false);
+      }
+    } catch (e) {
+      console.error("Failed to load follow data", e);
+    }
+  }
+
   useEffect(() => {
     loadTokenData();
   }, [params.id]);
+
+  useEffect(() => {
+    if (tokenInfo?.creator) {
+      loadFollowData(tokenInfo.creator);
+    }
+  }, [tokenInfo]);
+
+  async function toggleFollow() {
+    if (!tokenInfo?.creator) return;
+    setIsFollowLoading(true);
+    try {
+      const web3Account = typeof window !== "undefined" ? localStorage.getItem("web3Account") || "" : "";
+      const res = await fetch('/api/follow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetUserId: tokenInfo.creator, web3Account })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setIsFollowing(!isFollowing);
+        setFollowersCount(prev => data.action === "followed" ? prev + 1 : prev - 1);
+        showToast(data.action === "followed" ? "Followed creator!" : "Unfollowed creator", "success");
+      } else {
+        showToast(data.error || "Failed to toggle follow", "error");
+      }
+    } catch (error) {
+      showToast("Error toggling follow", "error");
+    }
+    setIsFollowLoading(false);
+  }
 
   async function handleTrade(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -262,9 +317,27 @@ export default function SoulDetails({ params }: { params: { id: string } }) {
                     <span className="text-sm text-zinc-300 font-medium font-mono">
                       {tokenInfo ? `${tokenInfo.creator.slice(0, 6)}...${tokenInfo.creator.slice(38, 42)}` : "Unknown"}
                     </span>
+                    {tokenInfo && (
+                      <div className="ml-2 flex items-center gap-2">
+                        <span className="text-xs text-zinc-500 font-bold">{followersCount} Followers</span>
+                        <button 
+                          onClick={toggleFollow}
+                          disabled={isFollowLoading}
+                          className={`text-xs px-3 py-1 font-bold rounded transition-colors disabled:opacity-50 ${isFollowing ? 'bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700' : 'bg-white text-black hover:bg-zinc-200'}`}
+                        >
+                          {isFollowLoading ? "..." : isFollowing ? "Unfollow" : "Follow"}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
+
+              {localToast && (
+                  <div className={`absolute top-4 left-1/2 -translate-x-1/2 z-50 text-xs px-4 py-2 rounded-full shadow-lg transition-all ${localToast.type === 'error' ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'}`}>
+                      {localToast.msg}
+                  </div>
+              )}
 
               <div className="flex flex-col items-center justify-center gap-3 min-w-[260px] bg-black/40 border border-white/5 p-5 rounded-2xl">
                 {isLoading ? (

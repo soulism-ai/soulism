@@ -14,13 +14,26 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Fetch user trades
     const tradesResult = await pool.query(
       `SELECT * FROM user_trades WHERE wallet_address = $1 ORDER BY created_at DESC`,
       [userId]
     );
     
     const trades = tradesResult.rows;
+
+    // Follower and Following counts
+    const followersResult = await pool.query(
+      `SELECT COUNT(*) FROM user_followers WHERE following_id = $1`,
+      [userId]
+    );
+
+    const followingResult = await pool.query(
+      `SELECT COUNT(*) FROM user_followers WHERE follower_id = $1`,
+      [userId]
+    );
+
+    const followersCount = parseInt(followersResult.rows[0].count || "0", 10);
+    const followingCount = parseInt(followingResult.rows[0].count || "0", 10);
 
     // Calculate roughly some stats based on trades
     let portfolioValue = 0;
@@ -42,6 +55,8 @@ export async function GET(req: NextRequest) {
         portfolioValue: portfolioValue.toFixed(3), 
         realizedPnl: realizedPnl.toFixed(3),
         totalRevenue: totalRevenue.toFixed(3),
+        followersCount,
+        followingCount,
         trades,
         boughtSouls: trades.filter(t => t.trade_type === 'buy'),
         soldSouls: trades.filter(t => t.trade_type === 'sell')

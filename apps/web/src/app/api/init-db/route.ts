@@ -41,6 +41,17 @@ export async function GET() {
       )
     `);
 
+    // 4. User Followers Table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS user_followers (
+        id SERIAL PRIMARY KEY,
+        follower_id VARCHAR(255) NOT NULL,
+        following_id VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(follower_id, following_id)
+      )
+    `);
+
     return NextResponse.json({ success: true, message: "Database tables initialized successfully." });
   } catch (error: any) {
     console.error("DB Init Error:", error);
