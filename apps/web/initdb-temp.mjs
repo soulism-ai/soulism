@@ -28,7 +28,7 @@ async function main() {
       ALTER TABLE souls_registry ADD COLUMN IF NOT EXISTS score FLOAT DEFAULT 0.0;
       ALTER TABLE souls_registry ADD COLUMN IF NOT EXISTS is_flagged BOOLEAN DEFAULT FALSE;
     `);
-    console.log("Updated souls_registry table.");
+    console.log("Updated souls_registry tables.");
     process.exit(0);
   } catch (err) {
     console.error(err);
