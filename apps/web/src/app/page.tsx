@@ -1,11 +1,18 @@
+'use client'
 import { GlowCard } from '@/components/GlowCard';
 import { HeavenAnimation } from '@/components/HeavenAnimation';
-
+import { MatrixBackground } from "@/components/matrix-background";
+import Link from 'next/link';
+const socials = {
+  twitter: "https://x.com/azibatoraxr?s=21",
+  telegram: "https://t.me/+MnX8_1fqY0A3YTYx",
+  discord: "https://discord.gg/psWgGuth",
+};
 export default function Home() {
   return (
-    <main className="min-h-screen relative flex flex-col pt-24 pb-20 px-6 sm:px-12 max-w-7xl mx-auto">
-      <HeavenAnimation />
-
+    <main className="h-screen relative flex flex-col pt-24 pb-20 px-6 sm:px-12 max-w-7xl mx-auto">
+      {/* <HeavenAnimation /> */}
+      <MatrixBackground />
       {/* Hero Section */}
       <div className="flex flex-col items-center text-center mt-16 mb-24 max-w-4xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-soul-purple/10 border border-soul-purple/20 text-soul-purple text-xs font-bold uppercase tracking-widest mb-8">
@@ -22,9 +29,9 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <a href="http://localhost:3000" className="px-8 py-4 rounded-full bg-white text-black font-bold hover:bg-zinc-200 transition-transform active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-            Launch Control Plane
-          </a>
+          <Link href="/docs" className="px-8 py-4 rounded-full bg-white text-black font-bold hover:bg-zinc-200 transition-transform active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            Documentation
+          </Link>
           <a href="https://github.com/soulism-ai/soulism" className="px-8 py-4 rounded-full bg-transparent border border-white/10 hover:border-white/30 text-white font-bold transition-colors">
             View on GitHub
           </a>
@@ -54,51 +61,12 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <div className="flex justify-center">
 
-      {/* Feature Grid */}
-      <div className="w-full max-w-5xl mx-auto">
-        <h2 className="font-display text-3xl font-bold mb-10 text-center">Engineered for Reality</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-          <GlowCard
-            title="Real Service Boundaries"
-            description="Gateway, policy, budgets, audit, personas, and memory are exposed as actual deployable microservices, not just a script."
-            icon={
-              <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-              </svg>
-            }
-          />
-
-          <GlowCard
-            title="Policy Gate & Budgets"
-            description="Tools aren't executed blindly by the model. Every proxy action runs through a policy gate assessing constraints, limits, and human-in-the-loop requirement."
-            icon={
-              <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              </svg>
-            }
-          />
-
-          <GlowCard
-            title="Immutable Audit Ledger"
-            description="Externally impactful actions produce append-only, tamper-evident audit records. Understand exactly what your agent did and why."
-            icon={
-              <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-              </svg>
-            }
-          />
-
-          <GlowCard
-            title="Signed Personas"
-            description="A persona is not 'prompt vibes'. It is a governed, signed configuration dictating reasoning boundaries, tool access, and memory retention policy."
-            icon={
-              <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-              </svg>
-            }
-          />
+        <div className="flex space-x-4">
+          <a href={socials.twitter} target="_blank" rel="noopener noreferrer" className="text-white">Twitter</a>
+          <a href={socials.telegram} target="_blank" rel="noopener noreferrer" className="text-white">Telegram</a>
+          <a href={socials.discord} target="_blank" rel="noopener noreferrer" className="text-white">Discord</a>
         </div>
       </div>
     </main>

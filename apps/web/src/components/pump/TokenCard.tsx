@@ -1,13 +1,13 @@
 import { ethers } from "ethers";
+import Link from "next/link";
 
 interface TokenCardProps {
-  toggleTrade: (token: any) => void;
   token: any;
 }
 
-export function TokenCard({ toggleTrade, token }: TokenCardProps) {
+export function TokenCard({ token }: TokenCardProps) {
   return (
-    <button onClick={() => toggleTrade(token)} className="flex flex-col bg-[#121212] border border-white/5 hover:border-white/20 rounded-xl p-4 transition-colors group cursor-pointer relative overflow-hidden text-left h-full w-full">
+    <Link href={`/souls/${token.token}`} className="flex flex-col bg-[#121212] border border-white/5 hover:border-white/20 rounded-xl p-4 transition-colors group cursor-pointer relative overflow-hidden text-left h-full w-full">
       <div className="flex items-start gap-3 mb-3 w-full">
         <div className="w-14 h-14 rounded-lg flex-shrink-0 bg-gradient-to-br from-soul-purple to-pink-500 shadow-inner flex items-center justify-center overflow-hidden">
           <img src={token.image} alt={token.name} className="w-full h-full object-cover mix-blend-overlay opacity-80" />
@@ -36,9 +36,9 @@ export function TokenCard({ toggleTrade, token }: TokenCardProps) {
       </div>
       
       <div className="mt-auto pt-3 flex items-center justify-between text-xs w-full text-zinc-500 font-mono">
-        <span>Trade Key</span>
+        <span>View Details & Trade</span>
         <span className="text-soul-purple group-hover:text-white transition-colors">→</span >
       </div>
-    </button>
+    </Link>
   );
 }

@@ -4,12 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { UserNav } from "./UserNav";
 import { useState, useRef, useEffect } from "react";
+import { ethers } from "ethers";
 
 export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [fee, setFee] = useState<bigint>(BigInt(0));
+  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
+  const [factory, setFactory] = useState<ethers.Contract | null>(null);
+  const [showCreate, setShowCreate] = useState(false);
+  const [web3Account, setWeb3Account] = useState<string | null>(null);
 
   // Close search when clicking outside
   useEffect(() => {
@@ -22,6 +29,22 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Check for Web3 Account
+  useEffect(() => {
+    const checkWeb3 = async () => {
+      if (typeof window !== "undefined" && typeof (window as any).ethereum !== "undefined") {
+        if (localStorage.getItem("web3_disconnected") !== "true") {
+          try {
+            const accounts = await (window as any).ethereum.request({ method: 'eth_accounts' });
+            if (accounts.length > 0) setWeb3Account(accounts[0]);
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      }
+    };
+    checkWeb3();
+  }, []);
   // Focus input when open
   useEffect(() => {
     if (isSearchOpen && inputRef.current) {
@@ -29,8 +52,18 @@ export function Navbar() {
     }
   }, [isSearchOpen]);
 
+  // Handle Scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 pointer-events-none">
+    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 transition-all duration-300 ${isScrolled ? "bg-black/80 backdrop-blur-md border-b border-white/5 pointer-events-auto shadow-2xl" : "bg-transparent border-b border-transparent pointer-events-none"}`}>
       <div className="flex items-center gap-12 pointer-events-auto">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative w-8 h-8 rounded-md flex items-center justify-center shadow-[0_0_12px_var(--tw-colors-soul-glow)] transition-all group-hover:shadow-[0_0_20px_var(--tw-colors-soul-glow)] overflow-hidden">
@@ -41,75 +74,50 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-6">
           <Link href="/souls" className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md">Souls</Link>
-          <Link href="/souls/upload" className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md">Upload</Link>
-          <button className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md">Import</button>
+          <Link href="/docs" className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md">Docs</Link>
+          <button 
+            onClick={() => window.dispatchEvent(new Event("toggle-support"))}
+            className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md"
+          >
+            Support
+          </button>
 
           {/* Interactive Search Component */}
-          <div ref={searchRef} className="relative flex items-center">
-            {isSearchOpen ? (
-              <div className="flex items-center bg-[#1c1c1c]/90 backdrop-blur-md border border-white/20 rounded-full overflow-hidden transition-all duration-300 w-64 shadow-xl">
-                <div className="pl-3 text-zinc-400">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                </div>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Search souls..."
-                  className="w-full bg-transparent border-none text-white px-2 py-1.5 focus:outline-none placeholder:text-zinc-500 text-sm"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Escape') setIsSearchOpen(false);
-                    // Add routing logic for "Enter" if needed eventually
-                  }}
-                />
+          <div className="relative flex items-center">
+            <div className="flex items-center bg-transparent border-b border-white/20 focus-within:border-white/50 transition-all duration-300 w-64">
+              <input
+                type="text"
+                placeholder="search for souls..."
+                className="w-full bg-transparent border-none text-white px-3 py-1.5 focus:outline-none placeholder:text-zinc-600 text-sm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim().length > 0) {
+                    window.location.href = `/souls?q=${encodeURIComponent(searchQuery.trim())}`;
+                  }
+                }}
+              />
+              {searchQuery.length > 0 && (
                 <button
-                  onClick={() => setIsSearchOpen(false)}
-                  className="pr-3 text-zinc-500 hover:text-zinc-300 transition-colors"
+                  onClick={() => setSearchQuery("")}
+                  className="pr-2 text-zinc-500 hover:text-white transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md flex items-center gap-1.5"
-              >
-                Search
-              </button>
-            )}
-
-            {/* Simulated Search Dropdown Results */}
-            {isSearchOpen && searchQuery.length > 0 && (
-              <div className="absolute top-10 left-0 w-80 bg-[#1c1c1c] border border-white/10 rounded-xl shadow-2xl py-2 z-50 overflow-hidden">
-                <div className="px-3 py-2 text-xs font-bold text-zinc-500 uppercase tracking-widest border-b border-white/5 mb-1">
-                  Results for "{searchQuery}"
-                </div>
-                <div className="max-h-64 overflow-y-auto no-scrollbar">
-                  {/* Mock Result 1 */}
-                  <div className="px-3 py-2 hover:bg-white/5 cursor-pointer flex items-center gap-3 transition-colors">
-                    <div className="w-8 h-8 rounded bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">T</div>
-                    <div className="min-w-0">
-                      <div className="text-sm text-white font-medium truncate">Trello Core</div>
-                      <div className="text-xs text-zinc-500 truncate">trello-core • @steipete</div>
-                    </div>
-                  </div>
-                  {/* Mock Result 2 */}
-                  <div className="px-3 py-2 hover:bg-white/5 cursor-pointer flex items-center gap-3 transition-colors">
-                    <div className="w-8 h-8 rounded bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">S</div>
-                    <div className="min-w-0">
-                      <div className="text-sm text-white font-medium truncate">Self-Improving Agent</div>
-                      <div className="text-xs text-zinc-500 truncate">self-improving • @pskoett</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-6 pointer-events-auto">
+        <Link 
+          href="/souls/upload" 
+          className="px-4 py-2 bg-green-500 border border-white/10 hover:bg-[#c2410c] text-white text-sm font-bold rounded-md transition-colors flex items-center gap-2"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          Create
+        </Link>
         <UserNav />
       </div>
     </nav>
