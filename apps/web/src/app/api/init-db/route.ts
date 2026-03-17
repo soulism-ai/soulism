@@ -52,6 +52,25 @@ export async function GET() {
       )
     `);
 
+    // 5. Chat Messages Table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS chat_messages (
+        id SERIAL PRIMARY KEY,
+        sender_address VARCHAR(255) NOT NULL,
+        receiver_address VARCHAR(255) NOT NULL,
+        content TEXT NOT NULL,
+        is_flagged BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // 6. Extend souls_registry for trending and AI Moderation
+    await pool.query(`
+      ALTER TABLE souls_registry ADD COLUMN IF NOT EXISTS views INT DEFAULT 0;
+      ALTER TABLE souls_registry ADD COLUMN IF NOT EXISTS score FLOAT DEFAULT 0.0;
+      ALTER TABLE souls_registry ADD COLUMN IF NOT EXISTS is_flagged BOOLEAN DEFAULT FALSE;
+    `);
+
     return NextResponse.json({ success: true, message: "Database tables initialized successfully." });
   } catch (error: any) {
     console.error("DB Init Error:", error);
