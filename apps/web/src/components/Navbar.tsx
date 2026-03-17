@@ -74,6 +74,8 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-6">
           <Link href="/souls" className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md">Souls</Link>
+          <Link href="/leaderboards" className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md">Leaderboards</Link>
+          <Link href="/dashboard/messages" className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md">Messages</Link>
           <Link href="/docs" className="text-sm font-medium text-zinc-300 hover:text-white transition-colors drop-shadow-md">Docs</Link>
           <button 
             onClick={() => window.dispatchEvent(new Event("toggle-support"))}
