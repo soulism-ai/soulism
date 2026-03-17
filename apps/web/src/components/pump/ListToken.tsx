@@ -19,7 +19,7 @@ export function ListToken({ toggleCreate, fee, provider, factory }: ListTokenPro
 
     try {
       const signer = await provider.getSigner();
-      const transaction = await factory.connect(signer).create(name, ticker, { value: fee });
+      const transaction = await (factory.connect(signer) as any).create(name, ticker, { value: fee });
       await transaction.wait();
       toggleCreate();
     } catch (error) {

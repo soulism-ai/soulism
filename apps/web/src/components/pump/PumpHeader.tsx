@@ -7,9 +7,9 @@ interface PumpHeaderProps {
 
 export function PumpHeader({ account, setAccount }: PumpHeaderProps) {
   async function connectHandler() {
-    if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+    if (typeof window !== "undefined" && typeof (window as any).ethereum !== "undefined") {
       try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
         const checksumAccount = ethers.getAddress(accounts[0]);
         setAccount(checksumAccount);
       } catch (err) {
