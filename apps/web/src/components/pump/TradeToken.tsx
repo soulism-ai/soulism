@@ -9,9 +9,11 @@ interface TradeTokenProps {
 }
 
 export function TradeToken({ toggleTrade, token, provider, factory }: TradeTokenProps) {
-  const [target, setTarget] = useState<bigint>(0n);
-  const [limit, setLimit] = useState<bigint>(0n);
-  const [cost, setCost] = useState<bigint>(0n);
+  const zero = BigInt(0);
+
+  const [target, setTarget] = useState<bigint>(zero);
+  const [limit, setLimit] = useState<bigint>(zero);
+  const [cost, setCost] = useState<bigint>(zero);
   const [isBuying, setIsBuying] = useState(false);
 
   async function buyHandler(e: FormEvent<HTMLFormElement>) {
@@ -34,7 +36,7 @@ export function TradeToken({ toggleTrade, token, provider, factory }: TradeToken
 
       const signer = await provider.getSigner();
 
-      const transaction = await factory.connect(signer).buy(
+      const transaction = await (factory.connect(signer) as any).buy(
         token.token,
         ethers.parseUnits(amountStr, 18),
         { value: totalCost }
@@ -93,7 +95,7 @@ export function TradeToken({ toggleTrade, token, provider, factory }: TradeToken
           </div>
           <div className="flex justify-between items-center">
             <span className="text-xs text-zinc-500">Current Key Price</span>
-            <span className="text-sm font-mono text-pink-400 font-bold">{cost > 0n ? ethers.formatUnits(cost, 18) : "..."} ETH</span>
+            <span className="text-sm font-mono text-pink-400 font-bold">{cost > zero ? ethers.formatUnits(cost, 18) : "..."} ETH</span>
           </div>
         </div>
 
