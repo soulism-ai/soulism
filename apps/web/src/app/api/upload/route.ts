@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 import { getServerSession } from "next-auth";
+import { scanSystemPrompt } from "@/lib/openai";
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +22,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // AI Anti-Virus Scanner: Scan description (and potentially file contents) for harm
+    const isHarmful = await scanSystemPrompt(description);
+    if (isHarmful) {
+      return NextResponse.json({ error: "Upload rejected: AI Scanner flagged content as harmful or malicious." }, { status: 403 });
+    }
+
     // In a full production env, you would upload the File to S3/Cloud Storage here.
     // We will just store the metadata in the database for now.
     const uploader = session?.user?.name || web3Account || "Unknown";
@@ -35,7 +42,10 @@ export async function POST(req: NextRequest) {
         description TEXT,
         uploader VARCHAR(255),
         file_size INT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        views INT DEFAULT 0,
+        score FLOAT DEFAULT 0.0,
+        is_flagged BOOLEAN DEFAULT FALSE
       )
     `);
 
