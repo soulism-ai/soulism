@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "installCommand": "pnpm install",
+  "installCommand": "npm install -g pnpm@10.32.1 && pnpm install --frozen-lockfile",
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next"
 }
